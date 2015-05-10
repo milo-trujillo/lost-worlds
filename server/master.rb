@@ -27,6 +27,7 @@ def getDescription(s, world)
 		while( (! gn.closed?) && line = gn.gets )
 			if( line == nil )
 				break
+			end
 			line = line.chomp()
 			s.puts(line)
 		end
@@ -61,6 +62,7 @@ def handleClient(s)
 	while( (! s.closed?) && command = s.gets )
 		if( command == nil )
 			break
+		end
 		command = command.chomp()
 		command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 		handleCommand(s, command)
