@@ -31,7 +31,7 @@ def getDescription(s, world)
 			gn.close()
 		end
 	rescue
-		s.puts("INTERNAL ERROR")
+		log("Error getting description")
 	end
 end
 
