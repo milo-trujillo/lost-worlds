@@ -24,9 +24,11 @@ def getDescription(s, world)
 	begin
 		gn = contactNode(0) # Later we'll contact 'world'
 		gn.puts("description")
-		while( line = gn.gets.chomp )
+		while( (! gn.closed?) && line = gn.gets.chomp )
 			s.puts(line)
 		end
+		unless( gn.closed? )
+			gn.close()
 	rescue
 		s.puts("INTERNAL ERROR")
 	end
