@@ -38,12 +38,11 @@ def getBoardDescription()
 end
 
 def handleConnection(conn)
-	while( command = conn.gets.chomp )
-		if( command == "description" )
-			response = getBoardDescription()
-			for r in response
-				conn.puts(r)
-			end
+	command = conn.gets.chomp()
+	if( command == "description" )
+		response = getBoardDescription()
+		for r in response
+			conn.puts(r)
 		end
 	end
 	conn.close()
