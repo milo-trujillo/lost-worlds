@@ -29,6 +29,7 @@ def getDescription(s, world)
 		end
 		unless( gn.closed? )
 			gn.close()
+		end
 	rescue
 		s.puts("INTERNAL ERROR")
 	end
