@@ -9,6 +9,8 @@ but not for validating any input.
 
 require 'socket'
 require 'thread'
+require_relative 'user'
+require_relative 'network'
 
 if __FILE__ == $0
 	puts "Server node started..."

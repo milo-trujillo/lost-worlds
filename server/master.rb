@@ -8,22 +8,49 @@ It is the only piece of code that directly interacts with users or any of the ot
 # Module imports
 require 'socket'
 require 'thread'
+require_relative 'user'
+require_relative 'network'
 
 # Global constants and config
 ListenPort = 2345
 Thread.abort_on_exception = true
 
+# Non constant globals
+users = []
+
 def log(msg)
 	puts msg
+end
+
+def getDescription(s, world)
+	s.puts("This is a description of the world.")
+end
+
+def handleCommand(s, command)
+	case command
+		when /^login:[\w+]:[\w+]$/
+			# Login stuff goes here
+			s.puts("LOGIN NOT YET IMPLEMENTED")
+		when /^description:[\d+]$/
+			world = command.split(':').last.to_i # Currently unused
+			getDescription(s, world)
+		when /^quit$/
+			s.puts("Goodbye.")
+			s.close()
+		else
+			s.puts("UNKNOWN COMMAND")
+	end
 end
 
 def handleClient(s)
 	log("New client connected!")
 	s.puts("Hello user.")
-	msg = s.gets
-	msg = msg.gsub(/[^\w\d ]/, '') # Strip unwanted chars
-	s.puts("I read: " + msg)
-	s.puts("Goodbye user")
+	loggedIn = false # We'll handle some kind of account system later
+	while( command = s.gets )
+		command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
+		handleCommand(s, command)
+	end
+	log("Client disconnected")
 	s.close()
 end
 
