@@ -10,10 +10,7 @@ require 'socket'
 require 'thread'
 require_relative 'user'
 require_relative 'network'
-
-# Global constants and config
-ListenPort = 2345
-Thread.abort_on_exception = true
+require_relative 'config'
 
 # Non constant globals
 users = []
@@ -55,7 +52,7 @@ def handleClient(s)
 end
 
 def listen()
-	server = TCPServer.open(ListenPort)
+	server = TCPServer.open(MasterListenPort)
 	loop {
 		Thread.start(server.accept) do |client|
 			handleClient(client)

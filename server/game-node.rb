@@ -11,6 +11,7 @@ require 'socket'
 require 'thread'
 require_relative 'user'
 require_relative 'network'
+require_relative 'config'
 
 if __FILE__ == $0
 	puts "Server node started..."
