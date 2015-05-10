@@ -12,7 +12,9 @@ simultaneously.
 # Gameplay section
 #
 
-# Nothing here now, we need a game first!
+# This describes the number of rows, and the number of columns on each row
+# The board is hexagonal, which makes describing it with arrays challenging
+Boardsize = [2, 3, 2]
 
 #
 # Architecture configuration
