@@ -14,7 +14,7 @@ require_relative 'network'
 require_relative 'config'
 
 # Non constant globals
-users = []
+$users = []
 
 def log(msg)
 	puts msg
@@ -24,7 +24,10 @@ def getDescription(s, world)
 	begin
 		gn = contactNode(0) # Later we'll contact 'world'
 		gn.puts("description")
-		while( (! gn.closed?) && line = gn.gets.chomp )
+		while( (! gn.closed?) && line = gn.gets )
+			if( line == nil )
+				break
+			line = line.chomp()
 			s.puts(line)
 		end
 		unless( gn.closed? )
@@ -55,7 +58,10 @@ def handleClient(s)
 	log("New client connected!")
 	s.puts("Hello user.")
 	loggedIn = false # We'll handle some kind of account system later
-	while( (! s.closed?) && command = s.gets.chomp )
+	while( (! s.closed?) && command = s.gets )
+		if( command == nil )
+			break
+		command = command.chomp()
 		command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 		handleCommand(s, command)
 	end
