@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
 =begin
-This code will run on one computer - the master game node that orders the other game nodes around
-It is the only piece of code that directly interacts with users or any of the other game nodes.
+This code will run on one computer - the master game node that orders the other
+game nodes around. It is the only piece of code that directly interacts with 
+users or any of the other game nodes.
 =end
 
 # Module imports
@@ -20,15 +21,23 @@ def log(msg)
 end
 
 def getDescription(s, world)
-	s.puts("This is a description of the world.")
+	begin
+		gn = contactNode(0) # Later we'll contact 'world'
+		gn.puts("description")
+		while( line = gn.gets.chomp )
+			s.puts(line)
+		end
+	rescue
+		s.puts("INTERNAL ERROR")
+	end
 end
 
 def handleCommand(s, command)
 	case command
-		when /^login:[\w+]:[\w+]$/
+		when /^login:[\w]+:[\w]+$/
 			# Login stuff goes here
 			s.puts("LOGIN NOT YET IMPLEMENTED")
-		when /^description:[\d+]$/
+		when /^description:[\d]+$/
 			world = command.split(':').last.to_i # Currently unused
 			getDescription(s, world)
 		when /^quit$/
@@ -43,12 +52,14 @@ def handleClient(s)
 	log("New client connected!")
 	s.puts("Hello user.")
 	loggedIn = false # We'll handle some kind of account system later
-	while( command = s.gets )
+	while( (! s.closed?) && command = s.gets.chomp )
 		command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 		handleCommand(s, command)
 	end
 	log("Client disconnected")
-	s.close()
+	unless( s.closed? )
+		s.close()
+	end
 end
 
 def listen()
