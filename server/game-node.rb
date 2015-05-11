@@ -45,7 +45,12 @@ def initBoard()
 	end
 end
 
+def log(s)
+	puts(s)
+end
+
 def getBoardDescription()
+	log("Returning board description")
 	descr = []
 	for row in 0 .. ($board.length - 1)
 		for col in 0 .. ($board[row].length - 1)
