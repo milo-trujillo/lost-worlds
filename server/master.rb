@@ -59,17 +59,24 @@ end
 # handleClient - Parses a single user command, then exits
 #
 def handleClient(s)
-	log("New client connected!")
-	s.puts("Hello user.")
-	loggedIn = false # We'll handle some kind of account system later
-	if( (! s.closed?) && command = s.gets )
-		command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
-		handleCommand(s, command)
+	begin
+		log("New client connected!")
+		s.puts("Hello user. Welcome to Lost Worlds.")
+		loggedIn = false # We'll handle some kind of account system later
+		if( (! s.closed?) && command = s.gets )
+			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
+			handleCommand(s, command)
+		end
+		unless( s.closed? )
+			s.close()
+		end
+		log("Client disconnected")
+	rescue
+		log("Client failure")
+		unless( s.closed? )
+			s.close()
+		end
 	end
-	unless( s.closed? )
-		s.close()
-	end
-	log("Client disconnected")
 end
 
 def listen()
