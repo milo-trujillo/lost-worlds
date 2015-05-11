@@ -45,7 +45,7 @@ def handleCommand(s, command)
 			# Login stuff goes here
 			s.puts("LOGIN NOT YET IMPLEMENTED")
 		when /^description:[\d]+$/
-			world = command.split(':').last.to_i # Currently unused
+			world = command.split(':').last.to_i
 			getDescription(s, world)
 			s.close()
 		when /^quit$/
