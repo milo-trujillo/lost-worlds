@@ -11,17 +11,35 @@ require 'socket'
 require 'thread'
 require_relative 'config'
 require_relative 'network'
+require_relative 'random'
 require_relative 'user'
 require_relative 'tile'
 
 $board = [] # Stores the actual board data
 $boardlock = Mutex.new # For freezing all orders while we update board
 
+#
+# We want a fairly even distribution of resources across the continent
+#
 def initBoard()
+	tilepool = []
+	tiledistribution = (getTotalTiles() / Tiletypes.length).to_i
+	for type in Tiletypes
+		for x in (1 .. tiledistribution)
+			tilepool.push(type)
+		end
+	end
+
 	for r in 0 .. (Boardsize.length - 1)
 		row = []
 		for x in 0 .. (Boardsize[r] - 1)
-			row.push(Tile.new("hex", r, x))
+			type = ""
+			if( tilepool.length > 0 )
+				type = extractRandomElement(tilepool)
+			else
+				type = getRandomElement(Tiletypes)
+			end
+			row.push(Tile.new(type, r, x))
 		end
 		$board.push(row)
 	end

@@ -15,6 +15,7 @@ simultaneously.
 # This describes the number of rows, and the number of columns on each row
 # The board is hexagonal, which makes describing it with arrays challenging
 Boardsize = [2, 3, 2]
+Tiletypes = ["coal", "iron", "shrooms"]
 
 #
 # Architecture configuration

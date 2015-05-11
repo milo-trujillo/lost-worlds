@@ -22,7 +22,7 @@ end
 
 def getDescription(s, world)
 	begin
-		gn = contactNode(0) # Later we'll contact 'world'
+		gn = contactNode(world.to_i)
 		gn.puts("description")
 		while( (! gn.closed?) && line = gn.gets )
 			if( line == nil )
