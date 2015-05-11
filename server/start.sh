@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 #
 # In our testing environment the master node is named "dream1"
@@ -6,10 +6,11 @@
 # it easy to start all nodes in unison.
 #
 
+DIR=`dirname "$BASH_SOURCE"`
 NAME=`hostname`
 
 if [ "$NAME" = "dream1" ]; then
-	./master.rb
+	$DIR/master.rb
 else
-	./game-node.rb
+	$DIR/game-node.rb
 fi
