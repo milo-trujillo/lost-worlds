@@ -7,13 +7,19 @@ String dataIntake;
 String userInput = "";
 int i;
 Tile[] TileArray = new Tile[7];
+boolean screenSwitch = false;
+PImage menu;
 
 void setup()
 {
-  size(1000,600);
+  menu = loadImage("menu.png");
+  size(1024,768);
   i = 1;
+  userInput = "description:0\n";
   ArrayBuilder();
+  userInput = "";
   print("HAI");
+  background(menu);
   for (int i = 0; i < TileArray.length; i++){
     //print (TileArray[i]);
   }
@@ -22,34 +28,52 @@ void setup()
 
 void draw()
 {
-  background(255);
-  fill(0);
-  text(userInput,200,200);
-  //if (dataIntake != null){
-   //text(dataIntake,300,300);
-  //}
-  
-  for (int i = 0; i < TileArray.length; i++)
+  if (screenSwitch == true)
   {
-    if (TileArray[i] == null)
+    background(255);
+    fill(0);
+    text(userInput,200,200);
+    //if (dataIntake != null){
+     //text(dataIntake,300,300);
+    //}
+    
+    for (int i = 0; i < TileArray.length; i++)
     {
-      //print(TileArray[i-1]);
-      continue;
+      if (TileArray[i] == null)
+      {
+        //print(TileArray[i-1]);
+        continue;
+      }
+      TileArray[i].converter();
+      TileArray[i].display();
     }
-    TileArray[i].converter();
-    TileArray[i].display();
   }
   
 }
 
 void keyPressed()
 {
+  screenSwitch = true;
   if ((key == BACKSPACE) && userInput.length() > 0 && (i < userInput.length()))
   {
     userInput = "";
   }
   if (key =='\n'){
     //myClient.write(userInput);
+    userInput= userInput+"\n";
+    String temp = "";
+    int op = 0;
+    int np = 0;
+    int j = 0;
+    for (i = 0; i < userInput.length(); i++)
+    {
+     if ((userInput.charAt(i) >= 33) && (userInput.charAt(i)<=126))
+     {
+       temp+= userInput.charAt(i);
+       j++;
+     }
+    }
+    userInput = temp+"\n";
     ArrayBuilder();
     userInput = "";
   }
@@ -69,7 +93,7 @@ void ArrayBuilder()
    myClient.setSoTimeout(3000);
    out = new PrintWriter(myClient.getOutputStream(), true);
    in = new BufferedReader(new InputStreamReader(myClient.getInputStream()));
-   out.write("description:0\n");
+   out.write(userInput);
    out.flush();
   }
   catch(Exception e)
@@ -150,8 +174,8 @@ class Tile
   String column;
   int xpos;
   int ypos;
-  int xoffsetDeep = 350;
-  int xoffsetShallow = 300;
+  int xoffsetDeep = 400;
+  int xoffsetShallow = 350;
   Tile(String nameTemp, String rowTemp, String columnTemp)
  {
   name = nameTemp+".png";
