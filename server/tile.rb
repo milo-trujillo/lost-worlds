@@ -19,7 +19,15 @@ class Tile
 	end
 
 	def getIDString()
-		return (type + ":" + row.to_s + ":" + column.to_s)
+		return ("Tile" + ":" + type + ":" + row.to_s + ":" + column.to_s + ":0")
 	end
 
+end
+
+def getTotalTiles()
+	total = 0
+	for x in Boardsize
+		total += x
+	end
+	return total
 end
