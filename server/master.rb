@@ -55,22 +55,21 @@ def handleCommand(s, command)
 	end
 end
 
+#
+# handleClient - Parses a single user command, then exits
+#
 def handleClient(s)
 	log("New client connected!")
 	s.puts("Hello user.")
 	loggedIn = false # We'll handle some kind of account system later
-	while( (! s.closed?) && command = s.gets )
-		if( command == nil )
-			break
-		end
-		command = command.chomp()
+	if( (! s.closed?) && command = s.gets )
 		command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 		handleCommand(s, command)
 	end
-	log("Client disconnected")
 	unless( s.closed? )
 		s.close()
 	end
+	log("Client disconnected")
 end
 
 def listen()
