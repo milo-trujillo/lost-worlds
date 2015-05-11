@@ -47,6 +47,7 @@ def handleCommand(s, command)
 		when /^description:[\d]+$/
 			world = command.split(':').last.to_i # Currently unused
 			getDescription(s, world)
+			s.close()
 		when /^quit$/
 			s.puts("Goodbye.")
 			s.close()
