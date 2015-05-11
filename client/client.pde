@@ -10,7 +10,7 @@ Tile[] TileArray = new Tile[7];
 
 void setup()
 {
-  size(1000,1000);
+  size(1000,600);
   i = 1;
   ArrayBuilder();
   print("HAI");
