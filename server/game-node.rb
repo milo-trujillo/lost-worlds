@@ -20,6 +20,11 @@ $boardlock = Mutex.new # For freezing all orders while we update board
 
 #
 # We want a fairly even distribution of resources across the continent
+# We also want a fairly even distribution of dice rolls for our tiles.
+# We'll get this by generating numbers from the center of 2..12 outwards
+# in both directions, repeated until we run out of tiles.
+#
+# Note to self: Start at die roll 7 and work outwards
 #
 def initBoard()
 	tilepool = []
