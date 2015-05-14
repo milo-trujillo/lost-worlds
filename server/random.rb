@@ -4,10 +4,16 @@
 This file provides random utilities for the master and game nodes.
 =end
 
+# Useful exported constants
+Dieminroll = 1
+Diemaxroll = 6
+Minroll = 2*Dieminroll
+Maxroll = 2*Diemaxroll
+
 # Simulates a double dice roll
 def getDiceRoll()
-	die1 = rand(6) + 1
-	die2 = rand(6) + 1
+	die1 = rand(Diemaxroll) + Dieminroll
+	die2 = rand(Diemaxroll) + Dieminroll
 	return die1 + die2
 end
 
