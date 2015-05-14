@@ -6,9 +6,15 @@ Socket myClient;
 String dataIntake;
 String userInput = "";
 int i;
-Tile[] TileArray = new Tile[7];
+Tile[] TileArray = new Tile[19];
 boolean screenSwitch = false;
 PImage menu;
+String usernameT = "";
+String usernameS = "";
+String passwordT = "";
+String passwordS = "";
+String tmp = "";
+boolean pass= false;
 
 void setup()
 {
@@ -23,13 +29,25 @@ void setup()
   for (int i = 0; i < TileArray.length; i++){
     //print (TileArray[i]);
   }
+
 }
 
 
 void draw()
 {
+  if (screenSwitch == false){
+    background(menu);
+    textSize(40);
+    text("Enter your username ==> ", 50,300);
+    text(usernameT,575,300);
+    text("Enter your password ==> ",50, 350);
+    text(tmp,575,350); 
+    text(usernameS, 575,600);
+    text(passwordS,575,700);
+  }
   if (screenSwitch == true)
   {
+    textSize(20);
     background(255);
     fill(0);
     text(userInput,200,200);
@@ -50,37 +68,72 @@ void draw()
   }
   
 }
-
+void mouseClicked(){
+  screenSwitch = true;
+}
 void keyPressed()
 {
-  screenSwitch = true;
-  if ((key == BACKSPACE) && userInput.length() > 0 && (i < userInput.length()))
-  {
-    userInput = "";
-  }
-  if (key =='\n'){
-    //myClient.write(userInput);
-    userInput= userInput+"\n";
-    String temp = "";
-    int op = 0;
-    int np = 0;
-    int j = 0;
-    for (i = 0; i < userInput.length(); i++)
+  if (screenSwitch == false){
+     if (key == '\n'){
+      //saves the string the user typed
+      usernameS = usernameT;
+      usernameT = "";
+      passwordS = passwordT;
+      passwordT = "";
+      tmp = "";
+    } if ((key!='\n') && (keyCode!= SHIFT) && (pass == false))
     {
-     if ((userInput.charAt(i) >= 33) && (userInput.charAt(i)<=126))
-     {
-       temp+= userInput.charAt(i);
-       j++;
-     }
+     usernameT = usernameT + key; 
     }
-    userInput = temp+"\n";
-    ArrayBuilder();
-    userInput = "";
+    if (key == '\t'){
+      pass = true;
+      tmp = "";
+    }
+    if ((keyCode == BACKSPACE) && (pass == false))
+    {
+      usernameT = "";
+    }
+    if ((keyCode == BACKSPACE) && (pass == true))
+    {
+      passwordT = "";
+      tmp = "";
+    }
+    if ((key!='\n') && (keyCode!= SHIFT) && (pass == true) && (key!='\t'))
+    {
+     passwordT = passwordT + key; 
+     tmp = tmp+"*";
+    } 
   }
-  else 
+  if (screenSwitch == true)
   {
-    userInput = userInput + key;
-  } 
+    if ((key == BACKSPACE) && userInput.length() > 0 && (i < userInput.length()) )
+    {
+      userInput = "";
+    }
+    if ((key =='\n') && (key!= BACKSPACE)){
+      //myClient.write(userInput);
+      userInput= userInput+"\n";
+      String temp = "";
+      int op = 0;
+      int np = 0;
+      int j = 0;
+      for (i = 0; i < userInput.length(); i++)
+      {
+       if ((userInput.charAt(i) >= 33) && (userInput.charAt(i)<=126))
+       {
+         temp+= userInput.charAt(i);
+         j++;
+       }
+      }
+      userInput = temp+"\n";
+      ArrayBuilder();
+      userInput = "";
+    }
+    if ((key!='\n') && (keyCode!= SHIFT))
+    {
+      userInput = userInput + key;
+    } 
+  }
 }
 
 void ArrayBuilder()
