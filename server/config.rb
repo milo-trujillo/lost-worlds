@@ -14,7 +14,7 @@ simultaneously.
 
 # This describes the number of rows, and the number of columns on each row
 # The board is hexagonal, which makes describing it with arrays challenging
-Boardsize = [2, 3, 2]
+Boardsize = [3, 4, 5, 4, 3]
 Tiletypes = ["coal", "iron", "shrooms"]
 
 #
