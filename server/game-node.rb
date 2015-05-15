@@ -102,7 +102,7 @@ def handleConnection(conn)
 				conn.puts(r)
 			end
 		# build:building_type:row:column:vertex
-		when /^build:[\w+]:[\d+]:[\d+]:[\d+]$/
+		when /^build:[\w]+:[\d]+:[\d]+:[\d]+$/
 			response = attemptBuild(command.split(':')[1..4])
 			conn.puts(response)
 		else
