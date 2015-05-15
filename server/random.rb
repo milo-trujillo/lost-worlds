@@ -7,6 +7,7 @@ This file provides random utilities for the master and game nodes.
 # Useful exported constants
 Dieminroll = 1
 Diemaxroll = 6
+Midroll = 7
 Minroll = 2*Dieminroll
 Maxroll = 2*Diemaxroll
 
