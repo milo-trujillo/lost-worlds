@@ -106,11 +106,11 @@ void keyPressed()
   }
   if (screenSwitch == true)
   {
-    if ((key == BACKSPACE) && userInput.length() > 0 && (i < userInput.length()) )
+    if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
     {
       userInput = "";
     }
-    if ((key =='\n') && (key!= BACKSPACE)){
+    if ((key =='\n') && (keyCode!= BACKSPACE)){
       //myClient.write(userInput);
       userInput= userInput+"\n";
       String temp = "";
@@ -130,7 +130,7 @@ void keyPressed()
       //print(RowList);
       userInput = "";
     }
-    if ((key!='\n') && (keyCode!= SHIFT))
+    if ((key!='\n') && (keyCode!= SHIFT) && (keyCode != BACKSPACE))
     {
       userInput = userInput + key;
     } 
@@ -200,7 +200,7 @@ void ArrayBuilder()
        continue;
      }
      //print("Description String:",d);
-     TileArray[i] = new Tile( d[1],d[2],d[3]);
+     TileArray[i] = new Tile( d[1],d[2],d[3],d[4]);
      //print("Hey. it crashed here");
      //print(d[1],d[2],d[3]);
      rc = d[2];
@@ -233,11 +233,13 @@ class Tile
   int totalRows;
   int xoffsetDeep = 400;
   int xoffsetShallow = 350;
-  Tile(String nameTemp, String rowTemp, String columnTemp)
+  String prob;
+  Tile(String nameTemp, String rowTemp, String columnTemp,String probTemp )
  {
   name = nameTemp+".png";
   row = rowTemp;
   column = columnTemp;
+  prob = probTemp;
  }
  void converter()
  {
@@ -258,6 +260,11 @@ class Tile
  void display()
  {
    image(loadImage(name),xpos,ypos);
+   //rectMode(CENTER);
+   fill(255);
+   ellipse(xpos+50,ypos+50,50,50);
+   fill(0);
+   text(prob,xpos+45,ypos+55);
  }
 }
 
