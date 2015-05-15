@@ -25,3 +25,18 @@ end
 def contactNode(nodenum)
 	return TCPSocket.open(Networkbase + Gamenodes[nodenum], NodeListenPort)
 end
+
+# Forwards responses from one socket to another until one closes
+# WARNING: liable to throw an exception, put inside a try/catch!
+def forwardResponse(send_to, read_from)
+	while( (! read_from.closed?) && line = read_from.gets )
+		if( line == nil )
+			break
+		end
+		line = line.chomp()
+		send_to.puts(line)
+	end
+	unless( read_from.closed? )
+		read_from.close()
+	end
+end

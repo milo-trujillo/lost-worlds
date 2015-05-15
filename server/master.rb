@@ -24,36 +24,41 @@ def getDescription(s, world)
 	begin
 		gn = contactNode(world.to_i)
 		gn.puts("description")
-		while( (! gn.closed?) && line = gn.gets )
-			if( line == nil )
-				break
-			end
-			line = line.chomp()
-			s.puts(line)
-		end
-		unless( gn.closed? )
-			gn.close()
-		end
+		forwardResponse(s, gn)
 	rescue
 		log("Error getting description")
 	end
 end
 
+def buildStructure(s, command)
+	# build:building_type:continent:row:column:vertex
+	info = command.split(':')
+	begin
+		gn = contactNode(info[2].to_i)
+		gn.puts("build:"+info[1]+":"+(info[3..5].join(':')))
+		forwardResponse(s, gn)
+	rescue
+		log("Error placing build order")
+	end
+end
+
 def handleCommand(s, command)
 	case command
+		# login:username:password
 		when /^login:[\w]+:[\w]+$/
 			# Login stuff goes here
 			s.puts("LOGIN NOT YET IMPLEMENTED")
+		# description:continent_number
 		when /^description:[\d]+$/
 			world = command.split(':').last.to_i
 			getDescription(s, world)
-			s.close()
-		when /^quit$/
-			s.puts("Goodbye.")
-			s.close()
+		# build:building_type:continent:row:column:vertex
+		when /^build:[\w]+:[\d]+:[\d]+:[\d]+:[\d]+$/
+			buildStructure(s, command)
 		else
 			s.puts("UNKNOWN COMMAND")
 	end
+	s.close()
 end
 
 #
