@@ -15,6 +15,15 @@ require_relative 'random'
 require_relative 'user'
 require_relative 'tile'
 
+#
+# Global constants
+#
+ConfirmOrder = "Order received"
+DenyOrder = "Order rejected"
+
+#
+# Global variables
+#
 $board = [] # Stores the actual board data
 $boardlock = Mutex.new # For freezing all orders while we update board
 
@@ -79,13 +88,24 @@ def getBoardDescription()
 	return descr
 end
 
+def attemptBuild(info)
+	return ConfirmOrder
+end
+
 def handleConnection(conn)
 	command = conn.gets.chomp()
-	if( command == "description" )
-		response = getBoardDescription()
-		for r in response
-			conn.puts(r)
-		end
+	case command
+		when /^description$/
+			response = getBoardDescription()
+			for r in response
+				conn.puts(r)
+			end
+		# build:building_type:row:column:vertex
+		when /^build:[\w+]:[\d+]:[\d+]:[\d+]$/
+			response = attemptBuild(command.split(':')[1..4])
+			for r in response
+				conn.puts(r)
+			end
 	end
 	conn.close()
 end

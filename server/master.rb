@@ -30,12 +30,11 @@ def getDescription(s, world)
 	end
 end
 
-def buildStructure(s, command)
-	# build:building_type:continent:row:column:vertex
-	info = command.split(':')
+def buildStructure(s, info)
+	# building_type:continent:row:column:vertex
 	begin
-		gn = contactNode(info[2].to_i)
-		gn.puts("build:"+info[1]+":"+(info[3..5].join(':')))
+		gn = contactNode(info[1].to_i)
+		gn.puts("build:"+info[0]+":"+(info[2..4].join(':')))
 		forwardResponse(s, gn)
 	rescue
 		log("Error placing build order")
@@ -54,7 +53,7 @@ def handleCommand(s, command)
 			getDescription(s, world)
 		# build:building_type:continent:row:column:vertex
 		when /^build:[\w]+:[\d]+:[\d]+:[\d]+:[\d]+$/
-			buildStructure(s, command)
+			buildStructure(s, command.split(':')[1..5])
 		else
 			s.puts("UNKNOWN COMMAND")
 	end
