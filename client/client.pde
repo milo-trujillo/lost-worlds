@@ -15,19 +15,23 @@ String passwordT = "";
 String passwordS = "";
 String tmp = "";
 boolean pass= false;
+int RowList[] = new int[0];
+String rc;
 
 void setup()
 {
   menu = loadImage("menu.png");
   size(1024,768);
   i = 1;
+  //print(round(float(5)/float(2)));
   userInput = "description:0\n";
   ArrayBuilder();
+  //print(RowList);
   userInput = "";
-  print("HAI");
+  //print("HAI");
   background(menu);
-  for (int i = 0; i < TileArray.length; i++){
-    //print (TileArray[i]);
+  for (int i = 0; i < RowList.length; i++){
+    print(RowList[i]);
   }
 
 }
@@ -51,15 +55,10 @@ void draw()
     background(255);
     fill(0);
     text(userInput,200,200);
-    //if (dataIntake != null){
-     //text(dataIntake,300,300);
-    //}
-    
     for (int i = 0; i < TileArray.length; i++)
     {
       if (TileArray[i] == null)
       {
-        //print(TileArray[i-1]);
         continue;
       }
       TileArray[i].converter();
@@ -81,6 +80,7 @@ void keyPressed()
       passwordS = passwordT;
       passwordT = "";
       tmp = "";
+      //print(RowList);
     } if ((key!='\n') && (keyCode!= SHIFT) && (pass == false))
     {
      usernameT = usernameT + key; 
@@ -98,7 +98,7 @@ void keyPressed()
       passwordT = "";
       tmp = "";
     }
-    if ((key!='\n') && (keyCode!= SHIFT) && (pass == true) && (key!='\t'))
+    if ((key!='\n') && (keyCode!= SHIFT) && (pass == true) && (key!='\t') && (keyCode!= BACKSPACE) )
     {
      passwordT = passwordT + key; 
      tmp = tmp+"*";
@@ -127,6 +127,7 @@ void keyPressed()
       }
       userInput = temp+"\n";
       ArrayBuilder();
+      //print(RowList);
       userInput = "";
     }
     if ((key!='\n') && (keyCode!= SHIFT))
@@ -151,12 +152,11 @@ void ArrayBuilder()
   }
   catch(Exception e)
   {
-    print("Something went wrong. HALP.");
+    //print("Something went wrong. HALP.");
     return;
   }
  int i = 0;
- 
- 
+ //String RowList[] = new String[0];
  
  while (true)
  {
@@ -177,11 +177,11 @@ void ArrayBuilder()
      {
        ret =(c = (char)myClient.getInputStream().read());
        //print("...");
-       print(hex(c));
-       print("\n");
+       //print(hex(c));
+       //print("\n");
        if ((ret == -1)|| (c==0xFFFF))
        {
-         print("ret is equal to -1.");
+         //print("ret is equal to -1.");
          return;
        }
        if (c == '\n')
@@ -192,28 +192,31 @@ void ArrayBuilder()
        line+=c;
      }
  
-     print(line);
+     //print(line);
      String[] d = split(line,':');
      if (d.length != 5)
      {
-       print ("d.length != 5");
+       //print ("d.length != 5");
        continue;
      }
      //print("Description String:",d);
      TileArray[i] = new Tile( d[1],d[2],d[3]);
-     print("Hey. it crashed here");
-     print(d[1],d[2],d[3]);
-     print("\n");
+     //print("Hey. it crashed here");
+     //print(d[1],d[2],d[3]);
+     rc = d[2];
+     //print("\n");
+     //print(rc);
+     RowList = append(RowList,int(rc));
+     //print(RowList);
      //print("This line is a nope line. Cause nope, it doesn't work.");
      i++;
    }
    catch(Exception e)
    {
-    print("Whyyyyyyyyy....",e.getMessage());
-    print(e.getMessage());
+    //print("Whyyyyyyyyy....",e.getMessage());
+    //print(e.getMessage());
     break; 
    }
-   
  }
  
  
@@ -227,6 +230,7 @@ class Tile
   String column;
   int xpos;
   int ypos;
+  int totalRows;
   int xoffsetDeep = 400;
   int xoffsetShallow = 350;
   Tile(String nameTemp, String rowTemp, String columnTemp)
@@ -234,7 +238,7 @@ class Tile
   name = nameTemp+".png";
   row = rowTemp;
   column = columnTemp;
- } 
+ }
  void converter()
  {
    ypos = 200+75*int(row);
@@ -245,6 +249,9 @@ class Tile
   if ( int(row)%2 != 0)
  { 
     xpos = xoffsetShallow + 100*int(column);
+ }
+ if ((round(float(max(RowList))/float(2)) == int(row))){
+   xpos = xoffsetShallow-50 + 100*int(column);
  }
 
  }
