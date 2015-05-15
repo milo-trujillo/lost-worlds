@@ -13,15 +13,24 @@ String usernameT = "";
 String usernameS = "";
 String passwordT = "";
 String passwordS = "";
+//board button
 int w1 = 200;
 int h1 = 100;
 int x1 = 50;
 int y1 = 100;
+// build button
+int w2 = 200;
+int h2 = 100;
+int y2 = 300;
+int x2 = 50;
+
+
 String tmp = "";
 boolean pass= false;
 int RowList[] = new int[0];
 String rc;
 boolean boardChange = false;
+boolean build = false;
 String message1;
 void setup()
 {
@@ -60,14 +69,27 @@ void draw()
     fill(120,120,120);
     background(255);
     rect(x1,y1,w1,h1);
+    rect(x2,y2,w2,h2);
     fill(0,200,200);
-    if (boardChange == false){
-    text("Click to change to \na different board", 55,145);
+    if (boardChange == false)
+    {
+      text("Click to change to \na different board", 55,145);
     }
-    if (boardChange == true){
-    text("Which board do you \nwish to change to?",55,145);
-    fill(255);
-    rect(x1,200,w1,50);
+    if (boardChange == true)
+    {
+      text("Which board do you \nwish to change to?",55,145);
+      fill(255);
+      rect(x1,200,w1,50);
+    }
+    if (build == false)
+    {
+     text("Click to Build",55,350); 
+    }
+    if (build == true)
+    {
+      text("What do you wish to build? \n Format: continent:row:column:vertex",55,350);
+      fill(255);
+      rect(x2,425,w2,50);
     }
     fill(0);
     text(userInput,55,230);
@@ -88,6 +110,9 @@ void mouseClicked(){
   if (screenSwitch == true){
    if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
     boardChange = true; 
+   }
+   if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
+    build = true; 
    }
   }
 }
