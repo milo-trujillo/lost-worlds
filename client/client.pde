@@ -232,7 +232,7 @@ class Tile
   int ypos;
   int totalRows;
   int xoffsetDeep = 400;
-  int xoffsetShallow = 350;
+  int xoffsetShallow = 325;
   String prob;
   Tile(String nameTemp, String rowTemp, String columnTemp,String probTemp )
  {
@@ -243,17 +243,17 @@ class Tile
  }
  void converter()
  {
-   ypos = 200+75*int(row);
+   ypos = (115*int(row))+100;
    if ( int(row)%2 == 0)
    {
-   xpos = xoffsetDeep+ 100*int(column);
+   xpos = xoffsetDeep+ 150*int(column);
    }
   if ( int(row)%2 != 0)
  { 
-    xpos = xoffsetShallow + 100*int(column);
+    xpos = xoffsetShallow + 150*int(column);
  }
  if ((round(float(max(RowList))/float(2)) == int(row))){
-   xpos = xoffsetShallow-50 + 100*int(column);
+   xpos = xoffsetShallow-75 + 150*int(column);
  }
 
  }
@@ -262,9 +262,9 @@ class Tile
    image(loadImage(name),xpos,ypos);
    //rectMode(CENTER);
    fill(255);
-   ellipse(xpos+50,ypos+50,50,50);
+   ellipse(xpos+75,ypos+75,50,50);
    fill(0);
-   text(prob,xpos+45,ypos+55);
+   text(prob,xpos+70,ypos+80);
  }
 }
 
