@@ -35,6 +35,19 @@ def initBoard()
 		end
 	end
 
+	probpool = []
+	diff = 0
+	while( probpool.length() < getTotalTiles() )
+		probpool.push(Midroll + diff)
+		if( probpool.length < getTotalTiles() )
+			probpool.push(Midroll - diff)
+		end
+		diff += 1
+		if( 7 + diff > Maxroll )
+			diff = 0
+		end
+	end
+
 	for r in 0 .. (Boardsize.length - 1)
 		row = []
 		for x in 0 .. (Boardsize[r] - 1)
@@ -44,7 +57,8 @@ def initBoard()
 			else
 				type = getRandomElement(Tiletypes)
 			end
-			row.push(Tile.new(type, r, x))
+			prob = extractRandomElement(probpool)
+			row.push(Tile.new(type, r, x, prob))
 		end
 		$board.push(row)
 	end
