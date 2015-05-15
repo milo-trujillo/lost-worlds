@@ -105,6 +105,8 @@ def handleConnection(conn)
 		when /^build:[\w+]:[\d+]:[\d+]:[\d+]$/
 			response = attemptBuild(command.split(':')[1..4])
 			conn.puts(response)
+		else
+			log("Received unknown command from master: " + command)
 	end
 	conn.close()
 end
