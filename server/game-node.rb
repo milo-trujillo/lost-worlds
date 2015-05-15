@@ -89,6 +89,7 @@ def getBoardDescription()
 end
 
 def attemptBuild(info)
+	log("Received build order")
 	return ConfirmOrder
 end
 
@@ -103,9 +104,7 @@ def handleConnection(conn)
 		# build:building_type:row:column:vertex
 		when /^build:[\w+]:[\d+]:[\d+]:[\d+]$/
 			response = attemptBuild(command.split(':')[1..4])
-			for r in response
-				conn.puts(r)
-			end
+			conn.puts(response)
 	end
 	conn.close()
 end
