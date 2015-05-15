@@ -13,11 +13,16 @@ String usernameT = "";
 String usernameS = "";
 String passwordT = "";
 String passwordS = "";
+int w1 = 200;
+int h1 = 100;
+int x1 = 50;
+int y1 = 100;
 String tmp = "";
 boolean pass= false;
 int RowList[] = new int[0];
 String rc;
-
+boolean boardChange = false;
+String message1;
 void setup()
 {
   menu = loadImage("menu.png");
@@ -52,9 +57,20 @@ void draw()
   if (screenSwitch == true)
   {
     textSize(20);
+    fill(120,120,120);
     background(255);
+    rect(x1,y1,w1,h1);
+    fill(0,200,200);
+    if (boardChange == false){
+    text("Click to change to \na different board", 55,145);
+    }
+    if (boardChange == true){
+    text("Which board do you \nwish to change to?",55,145);
+    fill(255);
+    rect(x1,200,w1,50);
+    }
     fill(0);
-    text(userInput,200,200);
+    text(userInput,55,230);
     for (int i = 0; i < TileArray.length; i++)
     {
       if (TileArray[i] == null)
@@ -69,6 +85,11 @@ void draw()
 }
 void mouseClicked(){
   screenSwitch = true;
+  if (screenSwitch == true){
+   if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
+    boardChange = true; 
+   }
+  }
 }
 void keyPressed()
 {
@@ -104,39 +125,44 @@ void keyPressed()
      tmp = tmp+"*";
     } 
   }
-  if (screenSwitch == true)
+  if ((screenSwitch == true) && (boardChange == true))
   {
-    if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
-    {
-      userInput = "";
-    }
-    if ((key =='\n') && (keyCode!= BACKSPACE)){
-      //myClient.write(userInput);
-      userInput= userInput+"\n";
-      String temp = "";
-      int op = 0;
-      int np = 0;
-      int j = 0;
-      for (i = 0; i < userInput.length(); i++)
-      {
-       if ((userInput.charAt(i) >= 33) && (userInput.charAt(i)<=126))
-       {
-         temp+= userInput.charAt(i);
-         j++;
-       }
-      }
-      userInput = temp+"\n";
-      ArrayBuilder();
-      //print(RowList);
-      userInput = "";
-    }
-    if ((key!='\n') && (keyCode!= SHIFT) && (keyCode != BACKSPACE))
-    {
-      userInput = userInput + key;
-    } 
+    UserInput("description:");
   }
 }
 
+void UserInput(String type)
+{
+    if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
+  {
+    userInput = "";
+  }
+  if ((key =='\n') && (keyCode!= BACKSPACE)){
+    //myClient.write(userInput);
+    userInput= type+userInput+"\n";
+    String temp = "";
+    int op = 0;
+    int np = 0;
+    int j = 0;
+    for (i = 0; i < userInput.length(); i++)
+    {
+     if ((userInput.charAt(i) >= 33) && (userInput.charAt(i)<=126))
+     {
+       temp+= userInput.charAt(i);
+       j++;
+     }
+    }
+    userInput = temp+"\n";
+    ArrayBuilder();
+    //print(RowList);
+    userInput = "";
+    boardChange = false;
+  }
+  if ((key!='\n') && (keyCode!= SHIFT) && (keyCode != BACKSPACE))
+  {
+    userInput = userInput + key;
+  } 
+}
 void ArrayBuilder()
 {
   PrintWriter out;
