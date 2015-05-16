@@ -25,7 +25,9 @@ DenyOrder = "Order rejected"
 # Global variables
 #
 $board = [] # Stores the actual board data
+$orders = [] # Stores orders between turn executions
 $boardlock = Mutex.new # For freezing all orders while we update board
+$turn = 1
 
 #
 # We want a fairly even distribution of resources across the continent
@@ -95,19 +97,21 @@ end
 
 def handleConnection(conn)
 	command = conn.gets.chomp()
-	case command
-		when /^description$/
-			response = getBoardDescription()
-			for r in response
-				conn.puts(r)
-			end
-		# build:building_type:row:column:vertex
-		when /^build:[\w]+:[\d]+:[\d]+:[\d]+$/
-			response = attemptBuild(command.split(':')[1..4])
-			conn.puts(response)
-		else
-			log("Received unknown command from master: " + command)
-	end
+	boardlock.synchronize {
+		case command
+			when /^description$/
+				response = getBoardDescription()
+				for r in response
+					conn.puts(r)
+				end
+			# build:building_type:row:column:vertex
+			when /^build:[\w]+:[\d]+:[\d]+:[\d]+$/
+				response = attemptBuild(command.split(':')[1..4])
+				conn.puts(response)
+			else
+				log("Received unknown command from master: " + command)
+		end
+	}
 	conn.close()
 end
 
@@ -124,7 +128,11 @@ if __FILE__ == $0
 	puts "Starting game node..."
 	initBoard()
 	Thread.start() do listen end
-	loop {
-		# Does nothing, but eventually time updates will occur here
-	}
+	loop do
+		sleep(Turnduration)
+		$boardlock.synchronize {
+			log("Turn heartbeat: " + $turn.to_s)
+			$turn += 1
+		}
+	end
 end

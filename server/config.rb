@@ -16,6 +16,7 @@ simultaneously.
 # The board is hexagonal, which makes describing it with arrays challenging
 Boardsize = [3, 4, 5, 4, 3]
 Tiletypes = ["coal", "iron", "shrooms"]
+Turnduration = 60 # Seconds between turn executions
 
 #
 # Architecture configuration
