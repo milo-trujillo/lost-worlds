@@ -18,19 +18,23 @@ int w1 = 200;
 int h1 = 100;
 int x1 = 50;
 int y1 = 100;
+boolean boardChange = false;
+
 // build button
 int w2 = 200;
 int h2 = 100;
 int y2 = 300;
 int x2 = 50;
+boolean build = false;
+
+// positions of text
+int ypos;
 
 
-String tmp = "";
 boolean pass= false;
+String tmp = "";
 int RowList[] = new int[0];
 String rc;
-boolean boardChange = false;
-boolean build = false;
 String message1;
 void setup()
 {
@@ -87,12 +91,16 @@ void draw()
     }
     if (build == true)
     {
-      text("What do you wish to build? \n Format: continent:row:column:vertex",55,350);
+      textSize(15);
+      text("What do you wish to build?",55,320);
+      textSize(13);
+      text("Format:\ncontinent:row:column:vertex",55,365);
       fill(255);
-      rect(x2,425,w2,50);
+      rect(x2,400,w2,50);
     }
     fill(0);
-    text(userInput,55,230);
+    textSize(20);
+    text(userInput,55,ypos);
     for (int i = 0; i < TileArray.length; i++)
     {
       if (TileArray[i] == null)
@@ -153,6 +161,11 @@ void keyPressed()
   if ((screenSwitch == true) && (boardChange == true))
   {
     UserInput("description:");
+    ypos = 230;
+  }
+  if ((screenSwitch == true) && (build == true)){
+    UserInput("build:");
+    ypos = 435;
   }
 }
 
@@ -182,6 +195,7 @@ void UserInput(String type)
     //print(RowList);
     userInput = "";
     boardChange = false;
+    build = false;
   }
   if ((key!='\n') && (keyCode!= SHIFT) && (keyCode != BACKSPACE))
   {
