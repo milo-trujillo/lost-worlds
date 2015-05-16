@@ -94,7 +94,7 @@ void draw()
       textSize(15);
       text("What do you wish to build?",55,320);
       textSize(13);
-      text("Format:\ncontinent:row:column:vertex",55,365);
+      text("Format:\nbuildingtype:continent:\nrow:column:vertex",55,350);
       fill(255);
       rect(x2,400,w2,50);
     }
@@ -113,6 +113,7 @@ void draw()
   }
   
 }
+//Responsible for command button switches, along with the screen switch
 void mouseClicked(){
   screenSwitch = true;
   if (screenSwitch == true){
@@ -124,6 +125,8 @@ void mouseClicked(){
    }
   }
 }
+
+//Responsible for constructing user input into a string, making backspace work, having username/passwords be a thing, setting positions of user input text on screen, recording the user's input
 void keyPressed()
 {
   if (screenSwitch == false){
@@ -168,7 +171,7 @@ void keyPressed()
     ypos = 435;
   }
 }
-
+//Responsible for preparing user input to send to the server/calling array builder to construct the tile arrays.... 
 void UserInput(String type)
 {
     if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
@@ -202,6 +205,7 @@ void UserInput(String type)
     userInput = userInput + key;
   } 
 }
+
 void ArrayBuilder()
 {
   PrintWriter out;
@@ -283,9 +287,6 @@ void ArrayBuilder()
     break; 
    }
  }
- 
- 
-  
 }
 
 class Tile
