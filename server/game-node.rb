@@ -48,7 +48,7 @@ def initBoard()
 	diff = 0
 	while( probpool.length() < getTotalTiles() )
 		probpool.push(Midroll + diff)
-		if( probpool.length < getTotalTiles() )
+		if( probpool.length < getTotalTiles() && diff != 0 )
 			probpool.push(Midroll - diff)
 		end
 		diff += 1
