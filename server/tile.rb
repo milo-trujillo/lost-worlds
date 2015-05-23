@@ -4,6 +4,9 @@
 This describes how a tile works, and provides some functionality for game-nodes
 =end
 
+# In case the board later changes shape
+TileVertexes = 6
+
 class Tile
 
 	attr_reader :row
@@ -56,6 +59,23 @@ def adjoiningTiles(tile, vertex)
 	end
 end
 
+# Checks if a given [row, col, vertex] exists on our board
+def validTile?(row, col, vertex)
+	if( row.is_a?(Integer) && col.is_a?(Integer) && vertex.is_a?(Integer) )
+		if( row >= 0 && row < Boardsize.length )
+			if( col >= 0 && col < Boardsize[row] )
+				if( vertex >= 0 && vertex < TileVertexes )
+					return true
+				end
+			end
+		end
+		return false
+	else
+		raise "Expected [row, col, vertex] as integers"
+	end
+end
+
+# Returns total number of tiles on the board
 def getTotalTiles()
 	total = 0
 	for x in Boardsize
