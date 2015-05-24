@@ -26,7 +26,7 @@ class Tile
 	end
 
 	def getIDString()
-		return ["Title", type, row.to_s, column.to_s, probability.to_s].join(":")
+		return ["Tile", type, row.to_s, column.to_s, probability.to_s].join(":")
 	end
 
 	def col
