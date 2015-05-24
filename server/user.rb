@@ -25,3 +25,23 @@ class User
 	end
 
 end
+
+# Checks if a provided username and password are valid
+def validLogin?(userlist, username, password)
+	for u in userlist
+		if( u.username == username )
+			return u.validPassword(password)
+		end
+	end
+	return false
+end
+
+# Checks if a given user is in a list
+def userExists?(userlist, username)
+	for u in userlist
+		if( u.username == username )
+			return true
+		end
+	end
+	return false
+end
