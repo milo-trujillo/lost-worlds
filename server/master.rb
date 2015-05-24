@@ -12,13 +12,10 @@ require 'thread'
 require_relative 'user'
 require_relative 'network'
 require_relative 'config'
+require_relative 'log'
 
 # Non constant globals
 $users = []
-
-def log(msg)
-	puts msg
-end
 
 def getDescription(s, world)
 	begin
