@@ -48,7 +48,7 @@ def handleLogin(auth)
 			# login:username:password
 			when /^login:[\w]+:[\w]+$/
 				username, password = auth.split(':')[1,2]
-				if( validLogin?($userlist, username, password) )
+				if( validLogin?($users, username, password) )
 					log("User " + username + " logged in")
 					return username
 				else
@@ -57,10 +57,11 @@ def handleLogin(auth)
 			# register:username:password
 			when /^register:[\w]+:[\w]+$/
 				username, password = auth.split(':')[1,2]
-				if( userExists?($userlist, username) )
+				log("Registering username: " + username + " Pass: " + password)
+				if( userExists?($users, username) )
 					return nil
 				else
-					$userlist.push(User.new(username, password))
+					$users.push(User.new(username, password))
 					log("Registered new user " + username)
 					return username
 				end
@@ -97,6 +98,7 @@ def handleClient(s)
 			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 			username = handleLogin(command)
 			if( username == nil )
+				log("User login failed")
 				s.puts("Invalid login.")
 				s.close()
 				return
