@@ -102,6 +102,8 @@ def handleClient(s)
 				s.puts("Invalid login.")
 				s.close()
 				return
+			else
+				s.puts("Login successful.")
 			end
 		end
 		if( (! s.closed?) && command = s.gets )
