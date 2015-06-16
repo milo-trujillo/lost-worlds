@@ -13,8 +13,8 @@ Maxroll = 2*Diemaxroll
 
 # Simulates a double dice roll
 def getDiceRoll()
-	die1 = rand(Diemaxroll) + Dieminroll
-	die2 = rand(Diemaxroll) + Dieminroll
+	die1 = rand(Diemaxroll - (Dieminroll - 1)) + Dieminroll
+	die2 = rand(Diemaxroll - (Dieminroll - 1)) + Dieminroll
 	return die1 + die2
 end
 
@@ -26,6 +26,7 @@ def extractRandomElement(list)
 	return item
 end
 
+# Returns a single random element without removing it from the list
 def getRandomElement(list)
 	return list[rand(list.length)]
 end

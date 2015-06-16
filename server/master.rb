@@ -12,14 +12,13 @@ require 'thread'
 require_relative 'user'
 require_relative 'network'
 require_relative 'config'
+require_relative 'log'
 
 # Non constant globals
 $users = []
+$userlock = Mutex.new # So we don't create two identical users
 
-def log(msg)
-	puts msg
-end
-
+# Returns a description of the current game board
 def getDescription(s, world)
 	begin
 		gn = contactNode(world.to_i)
@@ -30,6 +29,7 @@ def getDescription(s, world)
 	end
 end
 
+# Tells a particular node to issue a build order
 def buildStructure(s, info)
 	# building_type:continent:row:column:vertex
 	begin
@@ -41,12 +41,37 @@ def buildStructure(s, info)
 	end
 end
 
+# Interprets logging in or creating a new user
+def handleLogin(auth)
+	$userlock.synchronize {
+		case auth
+			# login:username:password
+			when /^login:[\w]+:[\w]+$/
+				username, password = auth.split(':')[1,2]
+				if( validLogin?($users, username, password) )
+					log("User " + username + " logged in")
+					return username
+				else
+					return nil
+				end
+			# register:username:password
+			when /^register:[\w]+:[\w]+$/
+				username, password = auth.split(':')[1,2]
+				log("Registering username: " + username + " Pass: " + password)
+				if( userExists?($users, username) )
+					return nil
+				else
+					$users.push(User.new(username, password))
+					log("Registered new user " + username)
+					return username
+				end
+		end
+		return nil
+	}
+end
+
 def handleCommand(s, command)
 	case command
-		# login:username:password
-		when /^login:[\w]+:[\w]+$/
-			# Login stuff goes here
-			s.puts("LOGIN NOT YET IMPLEMENTED")
 		# description:continent_number
 		when /^description:[\d]+$/
 			world = command.split(':').last.to_i
@@ -64,10 +89,23 @@ end
 # handleClient - Parses a single user command, then exits
 #
 def handleClient(s)
+	username = ""
 	begin
 		log("New client connected!")
 		s.puts("Hello user. Welcome to Lost Worlds.")
 		loggedIn = false # We'll handle some kind of account system later
+		if( (! s.closed?) && command = s.gets )
+			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
+			username = handleLogin(command)
+			if( username == nil )
+				log("User login failed")
+				s.puts("Invalid login.")
+				s.close()
+				return
+			else
+				s.puts("Login successful.")
+			end
+		end
 		if( (! s.closed?) && command = s.gets )
 			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 			handleCommand(s, command)
