@@ -17,13 +17,13 @@ String passwordS = "";
 int w1 = 200;
 int h1 = 100;
 int x1 = 50;
-int y1 = 100;
+int y1 = 500;
 boolean boardChange = false;
 
 // build button
 int w2 = 200;
 int h2 = 100;
-int y2 = 300;
+int y2 = 650;
 int x2 = 50;
 boolean build1 = false;
 
@@ -70,14 +70,14 @@ void draw()
     background(menu);
     textSize(40);
     //text("Enter your username ==> ", 50,300);
-    text(usernameT,575,300);
+    text(usernameT,300,550);
     //text("Enter your password ==> ",50, 350);
-    text(tmp,575,350); 
+    text(tmp,300,600); 
     text(usernameS, 575,600);
     text(passwordS,575,700);
     login.display();
     register.display();
-    print(userInput);
+    //print(userInput);
   }
   if (screenSwitch == true)
   { //Things that need to be addressed here: Actually establishing the build and description buttons, and taking out all the if statement nonsense, because it isn't really necessary anymore.
@@ -144,10 +144,12 @@ void mouseClicked(){
   if (screenSwitch == false){
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
       loginButton = true;
+      regButton = false;
       login.Switch();
     }
     if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
       regButton = true;
+      loginButton = false;
       register.Switch(); 
    }
   }
@@ -156,7 +158,7 @@ void mouseClicked(){
 //Responsible for constructing user input into a string, making backspace work, having username/passwords be a thing, setting positions of user input text on screen, recording the user's input
 void keyPressed()
 { 
-  if ((screenSwitch == false) && (loginButton == true)) {
+  if ((screenSwitch == false) && ((loginButton == true) || (regButton == true))) {
       if (key == '\n'){
       //saves the string the user typed
       usernameS = usernameT+":"+passwordT;
@@ -285,23 +287,12 @@ void ArrayBuilder()
  {
    try
    {
-     String line = "";
-     //print ("Something went wrong here.");
-     /*
-     if ((line = in.readLine()) == null)
-     {
-       print("hey. Hello. hi.");
-       return;
-     }
-     */
+    String line = "";
     int ret;
     char c; 
      while( true )
      {
        ret =(c = (char)myClient.getInputStream().read());
-       //print("...");
-       //print(hex(c));
-       //print("\n");
        if ((ret == -1)|| (c==0xFFFF))
        {
          //print("ret is equal to -1.");
@@ -319,20 +310,13 @@ void ArrayBuilder()
      String[] d = split(line,':');
      if (d.length != 5)
      {
-       //print ("d.length != 5");
+       //print (d);
        //The if statement could possibly go here? Something like if ((d.length == 1,) && (d[0] = "login successful")) { screenswitch = true;}
        continue;
      }
-     //print("Description String:",d);
      TileArray[i] = new Tile( d[1],d[2],d[3],d[4]);
-     //print("Hey. it crashed here");
-     //print(d[1],d[2],d[3]);
      rc = d[2];
-     //print("\n");
-     //print(rc);
      RowList = append(RowList,int(rc));
-     //print(RowList);
-     //print("This line is a nope line. Cause nope, it doesn't work.");
      i++;
    }
    catch(Exception e)
