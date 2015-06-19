@@ -68,6 +68,7 @@ void draw()
 { //Need to only allow user to type after they click either login OR register
   if (screenSwitch == false){
     background(menu);
+    //ServerResponse();
     textSize(40);
     //text("Enter your username ==> ", 50,300);
     text(usernameT,300,550);
@@ -264,6 +265,7 @@ void UserInput(String type)
 
 void ArrayBuilder()
 {
+  print("Array Builder got called...");
   PrintWriter out;
   BufferedReader in;
   try
@@ -277,14 +279,14 @@ void ArrayBuilder()
   }
   catch(Exception e)
   {
-    //print("Something went wrong. HALP.");
+    print(e.getMessage());
     return;
   }
  int i = 0;
- //String RowList[] = new String[0];
  
  while (true)
  {
+   print("I made it to the loop!");
    try
    {
     String line = "";
@@ -295,22 +297,25 @@ void ArrayBuilder()
        ret =(c = (char)myClient.getInputStream().read());
        if ((ret == -1)|| (c==0xFFFF))
        {
-         //print("ret is equal to -1.");
+         print("It got to line 297");
          return;
        }
        if (c == '\n')
        {
-        //print("c == \n");
+        print("It got to line 302");
         break; 
        }
+       //print(line);
+       print(c);
        line+=c;
+       print(line.length());
      }
  
-     //print(line);
+     print(line);
      String[] d = split(line,':');
      if (d.length != 5)
      {
-       //print (d);
+       print (d);
        //The if statement could possibly go here? Something like if ((d.length == 1,) && (d[0] = "login successful")) { screenswitch = true;}
        continue;
      }
