@@ -45,13 +45,14 @@ String rc;
 String message1;
 boolean loginButton = false;
 boolean regButton = false;
-
+StringList CommandList;
 
 void setup()
 {
   menu = loadImage("menu.png");
   size(1024,768);
   i = 1;
+  CommandList = new StringList();
   //print(round(float(5)/float(2)));
   //userInput = "description:0\n";
   ArrayBuilder();
@@ -84,6 +85,7 @@ void draw()
   }
   if (screenSwitch == true)
   { //Things that need to be addressed here: Actually establishing the build and description buttons, and taking out all the if statement nonsense, because it isn't really necessary anymore.
+    //print(CommandList);
     textSize(20);
     fill(120,120,120);
     background(255);
@@ -137,12 +139,19 @@ void mouseClicked(){
   if (screenSwitch == true){
    if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
     boardChange = true; 
+    print("boardChange is true");
+    //Line that may need to be taken out later OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+    UserInput("LR");
    }
    if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
     build1 = true; 
    }
+    // Currently, this sends login:username:password to the server every single time a key is pressed. The problem is, it's not allowing the other commands to be executed. Which is bad. As for ideas on how to fix this, maybe moving it into its own function? more conditionals? waiting statements? Switches? i've got no idea.... 
   }
   // new if statements
+  //if ((screenSwitch == true) && (boardChange == true)){
+    // UserInput("LR"); 
+   //}
   if ((screenSwitch == false)){
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
       regButton = false;
@@ -215,13 +224,10 @@ void keyPressed()
   if ((screenSwitch == false) && (regButton == true)){
     UserInput("register:");
   }
-  // Currently, this sends login:username:password to the server every single time a key is pressed. The problem is, it's not allowing the other commands to be executed. Which is bad. As for ideas on how to fix this, maybe moving it into its own function? more conditionals? waiting statements? Switches? i've got no idea.... 
-  if (screenSwitch == true){
-   UserInput("LR"); 
-  }
+ 
   if ((screenSwitch == true) && (boardChange == true))
   {
-    UserInput("description");
+    UserInput("description:");
     ypos = 230;
   }
   if ((screenSwitch == true) && (build1 == true))
@@ -233,17 +239,18 @@ void keyPressed()
 //Responsible for preparing user input to send to the server/calling array builder to construct the tile arrays.... 
 void UserInput(String type)
 {
-  //
+  ////// MAY NEED TO BE REMOVED LATER, THIS IF STATEMENT OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
   if (type == "LR"){
     userInput = savedName;
     ArrayBuilder();
     userInput = "";
-    boardChange = false;
+    //boardChange = false;
     build1 = false;
     return;
-  }
+  } //// And this one 00000000000000000000000000
   if (type == "DR"){
     userInput = "description:0";
+    ArrayBuilder();
     return;
   }
     if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
@@ -265,7 +272,13 @@ void UserInput(String type)
        j++;
      }
     }
+    //Responsible for adding commands to the list sent to the server #####################
     userInput = temp+"\n";
+    if (CommandList.size() >=2){
+     CommandList.remove(1);
+    }
+    CommandList.append(userInput);
+    //#######################################################
     ArrayBuilder();
     //print(RowList);
     userInput = "";
@@ -296,12 +309,19 @@ void ArrayBuilder()
    myClient.setSoTimeout(3000);
    out = new PrintWriter(myClient.getOutputStream(), true);
    in = new BufferedReader(new InputStreamReader(myClient.getInputStream()));
+   if (screenSwitch == true){
+     for (int i = 0; i < CommandList.size(); i++){
+      out.write(CommandList.get(i));
+      out.flush(); 
+     }
+   }
    out.write(userInput);
    out.flush();
   }
   catch(Exception e)
   {
     //print(e.getMessage());
+    print("Connection Closed");
     return;
   }
  int i = 0;
@@ -340,7 +360,11 @@ void ArrayBuilder()
         screenSwitch = true;
         savedName = userInput;
         //print(savedName);
+        //CommandList.append(savedName);
+        //print(CommandList);
+        
     } 
+    print(CommandList);
      String[] d = split(line,':');
      if (d.length != 5)
      {
