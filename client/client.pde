@@ -19,7 +19,7 @@ int h1 = 100;
 int x1 = 50;
 int y1 = 500;
 boolean boardChange = false;
-
+String savedName;
 // build button
 int w2 = 200;
 int h2 = 100;
@@ -45,13 +45,15 @@ String rc;
 String message1;
 boolean loginButton = false;
 boolean regButton = false;
+
+
 void setup()
 {
   menu = loadImage("menu.png");
   size(1024,768);
   i = 1;
   //print(round(float(5)/float(2)));
-  userInput = "description:0\n";
+  //userInput = "description:0\n";
   ArrayBuilder();
   //print(RowList);
   userInput = "";
@@ -135,25 +137,33 @@ void mouseClicked(){
   if (screenSwitch == true){
    if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
     boardChange = true; 
-    
    }
    if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
     build1 = true; 
    }
   }
   // new if statements
-  if (screenSwitch == false){
+  if ((screenSwitch == false)){
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
-      loginButton = true;
       regButton = false;
       login.Switch();
+      if (loginButton == false){
+        loginButton = true;
+        return;
+      }
+      if (loginButton == true){
+        loginButton = false;
+      }
+      //regButton = false;
+      //login.Switch();
+      //return;
     }
+  }
     if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
       regButton = true;
       loginButton = false;
       register.Switch(); 
    }
-  }
 }
 
 //Responsible for constructing user input into a string, making backspace work, having username/passwords be a thing, setting positions of user input text on screen, recording the user's input
@@ -199,20 +209,19 @@ void keyPressed()
      tmp = tmp+"*";
     } 
   } 
-  //if ((screenSwitch == false) && (loginButton == true))
-  //{
-   //UserInput("login:);
-   //ypos = 435; 
-  //}
-  if ((screenSwitch == false) && (loginButton == true)){
+    if ((screenSwitch == false) && (loginButton == true)){
     UserInput("login:");
   }
   if ((screenSwitch == false) && (regButton == true)){
     UserInput("register:");
   }
+  // Currently, this sends login:username:password to the server every single time a key is pressed. The problem is, it's not allowing the other commands to be executed. Which is bad. As for ideas on how to fix this, maybe moving it into its own function? more conditionals? waiting statements? Switches? i've got no idea.... 
+  if (screenSwitch == true){
+   UserInput("LR"); 
+  }
   if ((screenSwitch == true) && (boardChange == true))
   {
-    UserInput("description:");
+    UserInput("description");
     ypos = 230;
   }
   if ((screenSwitch == true) && (build1 == true))
@@ -224,6 +233,19 @@ void keyPressed()
 //Responsible for preparing user input to send to the server/calling array builder to construct the tile arrays.... 
 void UserInput(String type)
 {
+  //
+  if (type == "LR"){
+    userInput = savedName;
+    ArrayBuilder();
+    userInput = "";
+    boardChange = false;
+    build1 = false;
+    return;
+  }
+  if (type == "DR"){
+    userInput = "description:0";
+    return;
+  }
     if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
   {
     userInput = "";
@@ -265,7 +287,7 @@ void UserInput(String type)
 
 void ArrayBuilder()
 {
-  print("Array Builder got called...");
+  //print("Array Builder got called...");
   PrintWriter out;
   BufferedReader in;
   try
@@ -279,14 +301,14 @@ void ArrayBuilder()
   }
   catch(Exception e)
   {
-    print(e.getMessage());
+    //print(e.getMessage());
     return;
   }
  int i = 0;
  
  while (true)
  {
-   print("I made it to the loop!");
+   //print("I made it to the loop!");
    try
    {
     String line = "";
@@ -297,25 +319,31 @@ void ArrayBuilder()
        ret =(c = (char)myClient.getInputStream().read());
        if ((ret == -1)|| (c==0xFFFF))
        {
-         print("It got to line 297");
+         //print("It got to line 297");
          return;
        }
        if (c == '\n')
        {
-        print("It got to line 302");
+        //print("It got to line 302");
         break; 
        }
        //print(line);
-       print(c);
+       //print(c);
        line+=c;
-       print(line.length());
+       //print(line);
      }
  
-     print(line);
+     print("<"+line+">");
+     print(line.length());
+    if (line.length() == 17){
+     //print ("screenswitch is true");
+        screenSwitch = true;
+        savedName = userInput;
+        //print(savedName);
+    } 
      String[] d = split(line,':');
      if (d.length != 5)
      {
-       print (d);
        //The if statement could possibly go here? Something like if ((d.length == 1,) && (d[0] = "login successful")) { screenswitch = true;}
        continue;
      }
