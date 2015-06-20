@@ -1,3 +1,5 @@
+// Lost Worlds Client Code, written/put together by Amanda Howanice and Milo Trujillo
+//To do: make a game background screen and establish it in setup, then load it as the background for screenSwitch in draw, adjust buttons/fonts, figure out how to build stuff...
 import processing.net.*;
 import java.io.*;
 import java.net.*;
@@ -9,25 +11,34 @@ int i;
 Tile[] TileArray = new Tile[19];
 boolean screenSwitch = false;
 PImage menu;
+PImage gameScreen;
+// username and password variables
 String usernameT = "";
 String usernameS = "";
 String passwordT = "";
 String passwordS = "";
-//board button
+String savedName;
+
+//Button variables:
+
+//Login Button
 int w1 = 200;
 int h1 = 100;
 int x1 = 50;
 int y1 = 500;
 boolean boardChange = false;
-String savedName;
-// build button
+
+// Register button
 int w2 = 200;
 int h2 = 100;
 int y2 = 650;
 int x2 = 50;
 boolean build1 = false;
+
+//Description button
 int x3 = 55;
 int y3 = 130;
+//Build Button
 int x4 = 55;
 int y4 = 600;
 
@@ -72,34 +83,31 @@ void setup()
 
 
 void draw()
-{ 
+{ //Menu Screen Stuff
   if (screenSwitch == false){
     background(menu);
-    //ServerResponse();
     textSize(40);
-    //text("Enter your username ==> ", 50,300);
     text(usernameT,300,550);
-    //text("Enter your password ==> ",50, 350);
     text(tmp,300,600); 
     text(usernameS, 575,600);
     text(passwordS,575,700);
     login.display();
     register.display();
-    //print(userInput);
+    
   }
   if (screenSwitch == true)
-  { 
+  { //In game screen stuff
     textSize(20);
     fill(120,120,120);
     background(255);
-    //rect(x1,y1,w1,h1);
-    //rect(x2,y2,w2,h2);
     fill(0,200,200);
     description.display();
     build.display();
     fill(0);
     textSize(20);
     text(userInput,220,ypos);
+    
+    //Controls display of tiles
     for (int i = 0; i < TileArray.length; i++)
     {
       if (TileArray[i] == null)
@@ -113,8 +121,8 @@ void draw()
   
 }
 //Responsible for command button switches, along with the screen switch
-void mouseClicked(){ //Need to fix where buttons are in the in game screen
-  //screenSwitch = true;
+void mouseClicked(){ 
+// The Change Board Button
   if (screenSwitch == true){
    if ((mouseX >= x3) && (mouseX < x3+w1) && (mouseY > y3) && (mouseY < y3+h1)){
     boardChange = true; 
@@ -123,7 +131,7 @@ void mouseClicked(){ //Need to fix where buttons are in the in game screen
       build1 = false;
       build.Switch();
     }
-    //print("boardChange is true");
+// The Build button
    }
    if ((mouseX >= x4) && (mouseX < x4+w2) && (mouseY > y4) && (mouseY < y4+h2)){
     build1 = true; 
@@ -135,7 +143,7 @@ void mouseClicked(){ //Need to fix where buttons are in the in game screen
     
    } 
   }
-  if ((screenSwitch == false)){
+  if ((screenSwitch == false)){ // The login button
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
       regButton = false;
       login.Switch(); //triggers image switch for the button
@@ -148,7 +156,7 @@ void mouseClicked(){ //Need to fix where buttons are in the in game screen
       }
     }
   }
-    if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
+    if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){ // The register button
       regButton = true;
       loginButton = false;
       register.Switch(); 
@@ -157,7 +165,7 @@ void mouseClicked(){ //Need to fix where buttons are in the in game screen
 
 //Responsible for constructing user input into a string, making backspace work, having username/passwords be a thing, setting positions of user input text on screen, recording the user's input
 void keyPressed()
-{ 
+{ //This block is respomsible for recording user input only on the main menu screen, after the login button or the register button has been clicked.
   if ((screenSwitch == false) && ((loginButton == true) || (regButton == true))) {
       if (key == '\n'){
       //saves the string the user typed
@@ -166,7 +174,6 @@ void keyPressed()
       passwordS = passwordT;
       passwordT = "";
       tmp = "";
-      // the potentially breaking everything lines?
     } if ((key!='\n') && (keyCode!= SHIFT) && (pass == false))
     {
      usernameT = usernameT + key; 
@@ -199,17 +206,17 @@ void keyPressed()
     } 
   } 
     if ((screenSwitch == false) && (loginButton == true)){
-    UserInput("login:");
+    UserInput("login:"); //Calls User Input function when login button is clicked
   }
   if ((screenSwitch == false) && (regButton == true)){
-    UserInput("register:");
+    UserInput("register:"); //Calls User input function when register button is clicked
   }
  
   if ((screenSwitch == true) && (boardChange == true))
   {
     UserInput("description:");
     if (key ==ENTER){
-      description.Switch();
+      description.Switch(); // Changes the description button back to its "off" position
     }
     ypos = 220;
   }
@@ -217,7 +224,7 @@ void keyPressed()
   {
     UserInput("build:");
     if (key ==ENTER){
-      build.Switch();
+      build.Switch(); //Sets the build button to its off position.
     }
     ypos = 600;
   }
@@ -265,23 +272,21 @@ void UserInput(String type)
   if ((key =='\t') )
   {
    userInput = trim(userInput)+":";
-   //print(userInput);
-   //loginButton = false;
+
   }
 }
 
-void ArrayBuilder()
+void ArrayBuilder() //Responsible for constructing tile arrays, along with opening the connection to the server, sending messages to the server, and receiving messages from the server.
 {
-  //print("Array Builder got called...");
   PrintWriter out;
   BufferedReader in;
   try
-  {
+  { //Connecting to the server stuff
    myClient= new Socket("50.184.155.187",2345);
    myClient.setSoTimeout(3000);
    out = new PrintWriter(myClient.getOutputStream(), true);
    in = new BufferedReader(new InputStreamReader(myClient.getInputStream()));
-   if (screenSwitch == true){
+   if (screenSwitch == true){ //Sends commands to the server in a list, with login being first and then other commands afterward
      for (int i = 0; i < CommandList.size(); i++){
       out.write(CommandList.get(i));
       out.flush(); 
@@ -292,15 +297,12 @@ void ArrayBuilder()
   }
   catch(Exception e)
   {
-    //print(e.getMessage());
-    print("Connection Closed");
     return;
   }
  int i = 0;
  
  while (true)
- {
-   //print("I made it to the loop!");
+ { //Listens for server input and adds each character to a string, saving it as "line", then splitting that string into the appropriate list to build the tile array
    try
    {
     String line = "";
@@ -356,7 +358,7 @@ void ArrayBuilder()
 }
 
 class Tile
-{
+{ //Class to construct each tile
   String name;
   String row;
   String column;
@@ -400,7 +402,7 @@ class Tile
  }
 }
 
-class Button{
+class Button{ //Class for buttons, which control their imagery, being turned on/off, and position. 
  boolean clicked;
  String namePlaceholder;
  String name;
