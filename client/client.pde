@@ -26,11 +26,15 @@ int h2 = 100;
 int y2 = 650;
 int x2 = 50;
 boolean build1 = false;
+int x3 = 55;
+int y3 = 130;
+int x4 = 55;
+int y4 = 600;
 
 Button login = new Button("login1.png","login2.png",x1,y1,false);
 Button register = new Button("reg1.png","reg2.png",x2,y2,false);
-Button description = new Button("d1.png","d2.png",x1,y1,false);
-Button build = new Button("build1.png","build2.png",x2,y2,false);
+Button description = new Button("d1.png","d2.png",x3,y3,false);
+Button build = new Button("build1.png","build2.png",x4,y4,false);
 
 
 
@@ -68,7 +72,7 @@ void setup()
 
 
 void draw()
-{ //Need to only allow user to type after they click either login OR register
+{ 
   if (screenSwitch == false){
     background(menu);
     //ServerResponse();
@@ -84,43 +88,18 @@ void draw()
     //print(userInput);
   }
   if (screenSwitch == true)
-  { //Things that need to be addressed here: Actually establishing the build and description buttons, and taking out all the if statement nonsense, because it isn't really necessary anymore.
-    //print(CommandList);
+  { 
     textSize(20);
     fill(120,120,120);
     background(255);
-    rect(x1,y1,w1,h1);
-    rect(x2,y2,w2,h2);
+    //rect(x1,y1,w1,h1);
+    //rect(x2,y2,w2,h2);
     fill(0,200,200);
     description.display();
     build.display();
-    if (boardChange == false)
-    {
-      text("Click to change to \na different board", 55,145);
-       
-    }
-    if (boardChange == true)
-    {
-      text("Which board do you \nwish to change to?",55,145);
-      fill(255);
-      rect(x1,200,w1,50);
-    }
-    if (build1 == false)
-    {
-     text("Click to Build",55,350); 
-    }
-    if (build1 == true)
-    {
-      textSize(15);
-      text("What do you wish to build?",55,320);
-      textSize(13);
-      text("Format:\nbuildingtype:continent:\nrow:column:vertex",55,350);
-      fill(255);
-      rect(x2,400,w2,50);
-    }
     fill(0);
     textSize(20);
-    text(userInput,55,ypos);
+    text(userInput,220,ypos);
     for (int i = 0; i < TileArray.length; i++)
     {
       if (TileArray[i] == null)
@@ -134,28 +113,32 @@ void draw()
   
 }
 //Responsible for command button switches, along with the screen switch
-void mouseClicked(){
+void mouseClicked(){ //Need to fix where buttons are in the in game screen
   //screenSwitch = true;
   if (screenSwitch == true){
-   if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
+   if ((mouseX >= x3) && (mouseX < x3+w1) && (mouseY > y3) && (mouseY < y3+h1)){
     boardChange = true; 
-    print("boardChange is true");
-    //Line that may need to be taken out later OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-    UserInput("LR");
+    description.Switch();
+    if (build1 == true){
+      build1 = false;
+      build.Switch();
+    }
+    //print("boardChange is true");
    }
-   if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
+   if ((mouseX >= x4) && (mouseX < x4+w2) && (mouseY > y4) && (mouseY < y4+h2)){
     build1 = true; 
-   }
-    // Currently, this sends login:username:password to the server every single time a key is pressed. The problem is, it's not allowing the other commands to be executed. Which is bad. As for ideas on how to fix this, maybe moving it into its own function? more conditionals? waiting statements? Switches? i've got no idea.... 
+    build.Switch();
+    if (boardChange == true){
+      boardChange = false;
+      description.Switch();
+    }
+    
+   } 
   }
-  // new if statements
-  //if ((screenSwitch == true) && (boardChange == true)){
-    // UserInput("LR"); 
-   //}
   if ((screenSwitch == false)){
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
       regButton = false;
-      login.Switch();
+      login.Switch(); //triggers image switch for the button
       if (loginButton == false){
         loginButton = true;
         return;
@@ -163,9 +146,6 @@ void mouseClicked(){
       if (loginButton == true){
         loginButton = false;
       }
-      //regButton = false;
-      //login.Switch();
-      //return;
     }
   }
     if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){
@@ -228,31 +208,23 @@ void keyPressed()
   if ((screenSwitch == true) && (boardChange == true))
   {
     UserInput("description:");
-    ypos = 230;
+    if (key ==ENTER){
+      description.Switch();
+    }
+    ypos = 220;
   }
   if ((screenSwitch == true) && (build1 == true))
   {
     UserInput("build:");
-    ypos = 435;
+    if (key ==ENTER){
+      build.Switch();
+    }
+    ypos = 600;
   }
 }
 //Responsible for preparing user input to send to the server/calling array builder to construct the tile arrays.... 
 void UserInput(String type)
 {
-  ////// MAY NEED TO BE REMOVED LATER, THIS IF STATEMENT OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-  if (type == "LR"){
-    userInput = savedName;
-    ArrayBuilder();
-    userInput = "";
-    //boardChange = false;
-    build1 = false;
-    return;
-  } //// And this one 00000000000000000000000000
-  if (type == "DR"){
-    userInput = "description:0";
-    ArrayBuilder();
-    return;
-  }
     if ((keyCode == BACKSPACE) ) //&& userInput.length() > 0 && (i < userInput.length())
   {
     userInput = "";
@@ -368,7 +340,6 @@ void ArrayBuilder()
      String[] d = split(line,':');
      if (d.length != 5)
      {
-       //The if statement could possibly go here? Something like if ((d.length == 1,) && (d[0] = "login successful")) { screenswitch = true;}
        continue;
      }
      TileArray[i] = new Tile( d[1],d[2],d[3],d[4]);
@@ -378,7 +349,6 @@ void ArrayBuilder()
    }
    catch(Exception e)
    {
-    //print("Whyyyyyyyyy....",e.getMessage());
     //print(e.getMessage());
     break; 
    }
