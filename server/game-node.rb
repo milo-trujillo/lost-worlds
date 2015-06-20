@@ -37,7 +37,7 @@ def attemptBuild(info)
 	userCol = info[3]
 	userVertex = info[4]
 	if( validTile?(userRow, userCol, userVertex) )
-		$oders.push(info) # TODO: Look into Ruby hash tables and clean up orders
+		$orders.push(info)
 		log("Order accepted")
 		return ConfirmOrder
 	else
@@ -55,6 +55,10 @@ def handleConnection(conn)
 			# build:building_type:row:column:vertex
 			when /^build:[\w]+:[\d]+:[\d]+:[\d]+$/
 				response.push(attemptBuild(command.split(':')))
+			when /^unit:[\w]+:[\d]+:[\d]+:[\d]+$/
+				response.push(attemptUnit(command.split(':')))
+			when /^create:[\w]+$/ # For making a new player's first unit
+				response.push(attemptCreate(command.split(':')))
 			else
 				log("Received unknown command from master: " + command)
 		end

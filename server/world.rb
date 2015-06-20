@@ -69,6 +69,25 @@ def getBoardDescription()
 			descr.push($board[row][col].getIDString())
 		end
 	end
+	vertexes = Hash.new
+	for row in 0 .. ($board.length - 1)
+		for col in 0 .. ($board[row].length - 1)
+			for vertex in 0 .. TileVertexes
+				vertexes[standardizeCoordinate(row, col, vertex)] = 1
+			end
+		end
+	end
+	for coord in vertexes.keys
+		unit = $board[coord[0]][coord[1]].vertexes[coord[2]].getUnitID()
+		building = $board[coord[0]][coord[1]].vertexes[coord[2]].getBuildingID()
+		if( unit != "empty" )
+			descr.push(["Unit", coord[0], coord[1], coord[2], unit].join(':'))
+		end
+		if( building != "empty" )
+			descr.push(["Building", coord[0], coord[1], coord[2], building].join(':'))
+		end
+	end
+
 	return descr
 end
 

@@ -5,6 +5,8 @@ This describes how a tile works, and provides some functionality for game-nodes
 =end
 
 require_relative('config')
+require_relative('unit')
+require_relative('building')
 
 # In case the board later changes shape
 TileVertexes = 6
@@ -22,7 +24,7 @@ class Tile
 		@row = row
 		@column = column
 		@probability = probability
-		@vertexes = ["empty", "empty", "empty", "empty", "empty", "empty"]
+		@vertexes = Array.new(6, Vertex.new)
 	end
 
 	def getIDString()
@@ -31,6 +33,46 @@ class Tile
 
 	def col
 		return column
+	end
+
+	# TODO: Throw some exception here if unit and building aren't correct types
+	def setVertexUnit(vertex, unit)
+		@vertexes[vertex].unit = unit
+	end
+	
+	def setVertexBuilding(vertex, building)
+		@vertexes[vertex].building = building
+	end
+
+end
+
+=begin
+Every vertex on a board can contain a unit, building, or both. This class
+simplifies that task.
+=end
+class Vertex
+	attr_accessor :unit
+	attr_accessor :building
+
+	def initialize()
+		@unit = "empty"
+		@building = "empty"
+	end
+
+	def getUnitID()
+		if( @unit == "empty" )
+			return "empty"
+		else
+			return [@unit.type, @unit.user].join(":")
+		end
+	end
+
+	def getBuildingID()
+		if( @building == "empty" )
+			return "empty"
+		else
+			return [@building.type, @building.user].join(":")
+		end
 	end
 
 end
