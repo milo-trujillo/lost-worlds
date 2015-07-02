@@ -1,5 +1,5 @@
 // Lost Worlds Client Code, written/put together by Amanda Howanice and Milo Trujillo
-//To do: make a game background screen and establish it in setup, then load it as the background for screenSwitch in draw, adjust buttons/fonts, figure out how to build stuff...
+//To do: adjust buttons/fonts, figure out how to build stuff...
 import processing.net.*;
 import java.io.*;
 import java.net.*;
@@ -65,6 +65,7 @@ StringList CommandList;
 void setup()
 {
   menu = loadImage("menu.png");
+  gameScreen = loadImage("game.png");
   size(1024,768);
   i = 1;
   CommandList = new StringList();
@@ -97,9 +98,9 @@ void draw()
   }
   if (screenSwitch == true)
   { //In game screen stuff
+    background(gameScreen);
     textSize(20);
     fill(120,120,120);
-    background(255);
     fill(0,200,200);
     description.display();
     build.display();
@@ -396,9 +397,14 @@ class Tile
    image(loadImage(name),xpos,ypos);
    //rectMode(CENTER);
    fill(255);
-   ellipse(xpos+75,ypos+75,50,50);
+   ellipse(xpos+75,ypos+100,25,25); //originally 50 50
    fill(0);
-   text(prob,xpos+70,ypos+80);
+   if (prob.length() == 1){
+   text(prob,xpos+70,ypos+108);
+   }
+   if (prob.length() == 2){
+   text(prob,xpos+61,ypos+108);  
+   }
  }
 }
 
