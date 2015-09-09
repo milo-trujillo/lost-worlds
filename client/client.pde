@@ -1,5 +1,11 @@
 // Lost Worlds Client Code, written/put together by Amanda Howanice and Milo Trujillo
 //To do: adjust buttons/fonts, figure out how to build stuff...
+/*
+Goals for building stuff:
+Create class that makes building objects, have server make array of built things, 
+cycle through the built things and display them (function inside the Building class, add UI to have the user be able to select
+vertices rather than manually entering which they want to build. 
+*/
 import processing.net.*;
 import java.io.*;
 import java.net.*;
@@ -107,7 +113,7 @@ void draw()
     fill(0);
     textSize(20);
     text(userInput,220,ypos);
-    
+    //Need another for loop like this one to display the array of built stuff
     //Controls display of tiles
     for (int i = 0; i < TileArray.length; i++)
     {
@@ -357,7 +363,21 @@ void ArrayBuilder() //Responsible for constructing tile arrays, along with openi
    }
  }
 }
-
+/*
+//The hypothetical class for the built stuff... I need to know how they're being 
+identified to the server then somewhow figure out a formula to have each one be displayed. 
+class Building
+{
+ String name;
+ String LocationinfoTBD
+ int xpos;
+ int ypos; 
+ Building(String nameTemp, String LocationinfoTBD,){
+   name = nameTemp;
+ }
+ 
+}
+*/
 class Tile
 { //Class to construct each tile
   String name;
