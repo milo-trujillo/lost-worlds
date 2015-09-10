@@ -10,7 +10,6 @@ users or any of the other game nodes.
 require 'socket'
 require 'thread'
 require_relative 'user'
-require_relative 'network'
 require_relative 'config'
 require_relative 'log'
 
@@ -19,25 +18,10 @@ $users = []
 $userlock = Mutex.new # So we don't create two identical users
 
 # Returns a description of the current game board
-def getDescription(s, world)
+def getDescription(s)
 	begin
-		gn = contactNode(world.to_i)
-		gn.puts("description")
-		forwardResponse(s, gn)
 	rescue
-		log("Error getting description")
-	end
-end
-
-# Tells a particular node to issue a build order
-def buildStructure(s, info)
-	# building_type:continent:row:column:vertex
-	begin
-		gn = contactNode(info[1].to_i)
-		gn.puts("build:"+info[0]+":"+(info[2..4].join(':')))
-		forwardResponse(s, gn)
-	rescue
-		log("Error placing build order")
+		Log.log(Log::Error, "Error getting description")
 	end
 end
 
@@ -49,7 +33,7 @@ def handleLogin(auth)
 			when /^login:[\w]+:[\w]+$/
 				username, password = auth.split(':')[1,2]
 				if( validLogin?($users, username, password) )
-					log("User " + username + " logged in")
+					Log.log(Log::Info, "User " + username + " logged in")
 					return username
 				else
 					return nil
@@ -57,12 +41,12 @@ def handleLogin(auth)
 			# register:username:password
 			when /^register:[\w]+:[\w]+$/
 				username, password = auth.split(':')[1,2]
-				log("Registering username: " + username + " Pass: " + password)
+				Log.log(Log::Debug, "Registering user: " + username)
 				if( userExists?($users, username) )
 					return nil
 				else
 					$users.push(User.new(username, password))
-					log("Registered new user " + username)
+					Log.log(Log::Info, "Registered user: " + username)
 					return username
 				end
 		end
@@ -72,13 +56,9 @@ end
 
 def handleCommand(s, command)
 	case command
-		# description:continent_number
-		when /^description:[\d]+$/
-			world = command.split(':').last.to_i
-			getDescription(s, world)
-		# build:building_type:continent:row:column:vertex
-		when /^build:[\w]+:[\d]+:[\d]+:[\d]+:[\d]+$/
-			buildStructure(s, command.split(':')[1..5])
+		# description
+		when /^description+$/
+			getDescription(s)
 		else
 			s.puts("UNKNOWN COMMAND")
 	end
@@ -91,14 +71,14 @@ end
 def handleClient(s)
 	username = ""
 	begin
-		log("New client connected!")
+		Log.log(Log::Info, "New client connected!")
 		s.puts("Hello user. Welcome to Lost Worlds.")
 		loggedIn = false # We'll handle some kind of account system later
 		if( (! s.closed?) && command = s.gets )
 			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 			username = handleLogin(command)
 			if( username == nil )
-				log("User login failed")
+				Log.log(Log::Debug, "User login failed")
 				s.puts("Invalid login.")
 				s.close()
 				return
@@ -113,9 +93,9 @@ def handleClient(s)
 		unless( s.closed? )
 			s.close()
 		end
-		log("Client disconnected")
+		Log.log(Log::Debug, "Client disconnected")
 	rescue
-		log("Client failure")
+		Log.log(Log::Warning, "Client failure")
 		unless( s.closed? )
 			s.close()
 		end
@@ -123,7 +103,7 @@ def handleClient(s)
 end
 
 def listen()
-	server = TCPServer.open(MasterListenPort)
+	server = TCPServer.open(ListenPort)
 	loop {
 		Thread.start(server.accept) do |client|
 			handleClient(client)
@@ -132,9 +112,9 @@ def listen()
 end
 
 if __FILE__ == $0
-	puts "Starting master server..."
+	puts "Starting game server..."
 	Thread.start() do listen end
-	puts "Master server started."
+	puts "Server started."
 	loop {
 		# Does nothing, but we need to stay open to listen for connections
 	}
