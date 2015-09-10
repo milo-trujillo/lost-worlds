@@ -72,7 +72,7 @@ def getBoardDescription()
 	vertexes = Hash.new
 	for row in 0 .. ($board.length - 1)
 		for col in 0 .. ($board[row].length - 1)
-			for vertex in 0 .. TileVertexes
+			for vertex in (0 .. TileVertexes - 1)
 				vertexes[standardizeCoordinate(row, col, vertex)] = 1
 			end
 		end
