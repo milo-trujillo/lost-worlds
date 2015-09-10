@@ -121,8 +121,11 @@ def standardizeCoordinate(row, col, vertex)
 			valid.push(c)
 		end
 	end
-	puts "For run: " + row.to_s + " " + col.to_s
-	puts "Valid is calibrated, contains: " + valid.to_s # Debugging
+	if( topRow.size == 0 )
+		if( validTile?(row, col, vertex) )
+			valid = [[row, col, vertex]]
+		end
+	end
 	topRow = valid[0][0] # Crashes here
 	leftCol = valid[0][1]
 	vert = valid[0][2]
