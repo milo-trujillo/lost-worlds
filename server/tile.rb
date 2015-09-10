@@ -122,9 +122,11 @@ def standardizeCoordinate(row, col, vertex)
 		end
 	end
 	if( valid.size == 0 )
+		puts "Having trouble with coordinates #{row.to_s} #{col.to_s} #{vertex}"
 		if( validTile?(row, col, vertex) )
 			valid = [[row, col, vertex]]
 		end
+		puts "Array has been patched to contain: " + valid.to_s
 	else
 		puts "Correct 'valid' array here: " + valid.to_s
 	end
