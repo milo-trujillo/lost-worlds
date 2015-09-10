@@ -114,6 +114,7 @@ def standardizeCoordinate(row, col, vertex)
 	coords = []
 	coords.push([row, col, vertex])
 	coords += adjoiningTiles(Tile.new("hex", row, col, 0), vertex)
+	puts coords.to_s # Debugging
 	valid = []
 	for c in coords
 		if( validTile?(c[0], c[1], c[2]) )
