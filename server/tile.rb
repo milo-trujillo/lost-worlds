@@ -100,7 +100,7 @@ def adjoiningTiles(tile, vertex)
 				return [[tile.row - 1, tile.col - 1, 3],
 					[tile.row, tile.col - 1, 1]]
 			else
-				raise "Invalid vertex!"
+				raise "Invalid vertex (" + vertex.to_s + ")!"
 		end
 	else
 		raise "Expected a tile and an integer vertex"
