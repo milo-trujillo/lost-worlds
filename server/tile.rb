@@ -9,7 +9,7 @@ require_relative('unit')
 require_relative('building')
 
 # In case the board later changes shape
-TileVertexes = 6
+TileVertexes = 5
 
 class Tile
 
