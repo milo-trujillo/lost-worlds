@@ -3,9 +3,6 @@
 =begin
 This file holds global configuration options for the game, both in terms of
 gameplay and technical configuration.
-
-It is in its own file to make it easy to configure the master and game nodes
-simultaneously.
 =end
 
 #
@@ -23,3 +20,7 @@ Turnduration = 60 # Seconds between turn executions
 #
 Thread.abort_on_exception = true
 
+#
+# Network configuration
+#
+ListenPort = 2345
