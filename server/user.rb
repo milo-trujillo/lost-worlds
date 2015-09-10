@@ -1,27 +1,32 @@
 #!/usr/bin/env ruby
 
 =begin
-On game nodes this class is used to associate buildings or units with a
-particular username. On the master node it is also used for authentication.
+	The user class stores authentication data for each account.
 =end
 
+require 'base64'
 require 'digest'
+
+PasswordSalt = "jk}ldh1qVzMT~E.p"
 
 class User
 
-	attr_reader :username
-
 	def initialize(username, password)
-		@username = username
-		@password = Digest::SHA256.hexdigest(password)
+		@username = Base64.strict_encode64(username)
+		@password = Digest::SHA256.hexdigest(password + PasswordSalt)
 	end
 
 	def validPassword(password)
-		if( @password == Digest::SHA256.hexdigest(password) )
+		if( @password == Digest::SHA256.hexdigest(password + PasswordSalt) )
 			return true
 		else
 			return false
 		end
+	end
+
+	# We store the username base64 encoded so we can safely use YAML later
+	def username
+		return Base64.strict_decode64(@username)
 	end
 
 end
