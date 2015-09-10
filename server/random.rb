@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 
 =begin
-This file provides random utilities for the master and game nodes.
+	This file provides RNG utilities for world generation and resource 
+	generation. It should *not* be considered cryptographically secure.
 =end
 
 # Useful exported constants
