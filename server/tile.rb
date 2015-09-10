@@ -121,7 +121,7 @@ def standardizeCoordinate(row, col, vertex)
 			valid.push(c)
 		end
 	end
-	if( topRow.size == 0 )
+	if( valid.size == 0 )
 		if( validTile?(row, col, vertex) )
 			valid = [[row, col, vertex]]
 		end
