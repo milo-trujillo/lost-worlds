@@ -118,10 +118,11 @@ def standardizeCoordinate(row, col, vertex)
 	valid = []
 	for c in coords
 		if( validTile?(c[0], c[1], c[2]) )
+			puts "Found valid coordinates at " + c.to_s
 			valid.push(c)
 		end
 	end
-	topRow = valid[0][0]
+	topRow = valid[0][0] # Crashes here
 	leftCol = valid[0][1]
 	vert = valid[0][2]
 	for v in valid
