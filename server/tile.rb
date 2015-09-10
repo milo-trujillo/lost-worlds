@@ -125,6 +125,8 @@ def standardizeCoordinate(row, col, vertex)
 		if( validTile?(row, col, vertex) )
 			valid = [[row, col, vertex]]
 		end
+	else
+		puts "Correct 'valid' array here: " + valid.to_s
 	end
 	topRow = valid[0][0] # Crashes here
 	leftCol = valid[0][1]
