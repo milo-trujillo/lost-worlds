@@ -58,8 +58,8 @@ end
 # Checks if a given [row, col, vertex] exists on our board
 def validTile?(row, col)
 	if( row.is_a?(Integer) && col.is_a?(Integer) )
-		if( row >= 0 && row < Boardsize.length )
-			if( col >= 0 && col < Boardsize[row] )
+		if( row >= 0 && row < Configuration::BoardHeight )
+			if( col >= 0 && col < Configuration::BoardWidth )
 				return true
 			end
 		end
@@ -72,8 +72,11 @@ end
 # Returns total number of tiles on the board
 def getTotalTiles()
 	total = 0
-	for x in Boardsize
-		total += x
-	end
+	#for x in Boardsize
+		#total += x
+	#end
+	# This is a hack, eventually we'll want to get the number of legit
+	# tiles instead of the board size
+	total = Configuration::BoardWidth * Configuration::BoardHeight
 	return total
 end
