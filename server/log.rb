@@ -1,15 +1,20 @@
 #!/usr/bin/env ruby
 
 =begin
-	This file defines how messages should be logged.
+	This file defines how messages should be logged. At present it's just a
+	wrapper around 'puts', but later *might* use files if our project ever
+	gets that pro.
 =end
 
 require 'thread'
 
+require_relative 'config'
+
 module Log
 	$logLock = Mutex.new
-	$debugMode = true
 
+	# Define some constants for log messages
+	# All messages must come with a log level to be printed
 	Debug   = 1
 	Info    = 2
 	Warning = 3
@@ -18,7 +23,7 @@ module Log
 	def Log.log(level, msg)
 		case level
 			when Debug
-				if( $debugMode == true )
+				if( Configuration::DebugMode == true )
 					$logLock.synchronize {
 						puts "Debug: " + msg.to_s
 					}
@@ -41,14 +46,4 @@ module Log
 				}
 		end
 	end
-
-	# If we want to set debug mode based on a command line argument...
-	def Log.setDebugMode(bool)
-		# Only want to set valid booleans
-		if( bool == true )
-			$debugMode = true
-		elsif( bool == false )
-			$debugMode = false
-		end
-	end
-end
+end	
