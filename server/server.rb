@@ -13,10 +13,6 @@ require_relative 'config'
 require_relative 'log'
 require_relative 'client'
 
-# Non constant globals
-$users = []
-$userlock = Mutex.new # So we don't create two identical users
-
 # This is a hack for handling repeated signals, as described here:
 # http://www.sitepoint.com/the-self-pipe-trick-explained/
 SIGNAL_QUEUE = []
@@ -28,16 +24,25 @@ end
 
 def handleInt
 	puts("") # My terminal prints '^C' when I press it, so let's clear that
+	Log.log(Log::Info, "Saving state...")
+	Configuration.prepareState()
+	Board.save(Configuration::BoardPath)
 	Log.log(Log::Info, "Quitting...")
 	exit(0)
 end
 
 if __FILE__ == $0
-	puts "Starting game server..."
-	# Do initialization here
-	#if( Configuration.stateExists )
-		# Load and clear state
-	#end
+	Log.log(Log::Info, "Starting game server...")
+
+	# Restore from disk or create new universe
+	if( Configuration.stateExists? )
+		Board.load(Configuration::BoardPath)
+		Configuration.clearState
+	else
+		Board.generate
+	end
+
+	# Start up networking and let the users inside
 	server = TCPServer.open(Configuration::ListenPort)
 	while(true)
 		case SIGNAL_QUEUE.pop

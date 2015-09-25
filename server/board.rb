@@ -24,7 +24,7 @@ module Board
 	Eventually we'll want something more complex to make contiguous forests, 
 	continents, etc.
 =end
-	def Board.genBoard
+	def Board.generate
 		$boardLock.synchronize {
 			$board.clear()
 			for row in (0 .. Configuration::BoardHeight)
@@ -53,7 +53,7 @@ module Board
 		return Tile.new("empty", 0)
 	end
 
-	def Board.saveBoard(filename)
+	def Board.save(filename)
 		f = File.open(filename, "w")
 		boardblob = ""
 		$boardLock.synchronize {
@@ -64,7 +64,7 @@ module Board
 		Log.log(Log::Info, "Saved board to file '" + filename + "'")
 	end
 
-	def Board.loadBoard(filename)
+	def Board.load(filename)
 		f = File.open(filename, "r")
 		boardblob = Zlib::Inflate.inflate(f.gets)
 		$boardLock.synchronize {
