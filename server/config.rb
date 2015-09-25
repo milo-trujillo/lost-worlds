@@ -5,6 +5,8 @@ This file holds global configuration options for the game, both in terms of
 gameplay and technical configuration.
 =end
 
+require_relative 'log'
+
 module Configuration
 	#
 	# Gameplay section
@@ -28,4 +30,46 @@ module Configuration
 	# Network configuration
 	#
 	ListenPort = 2345
+
+	#
+	# Paths 
+	#
+	StateDir = "./state"
+	UserPath = StateDir + "/users.db"
+	BoardPath = StateDir + "/board.db"
+	StateFiles = [UserPath, BoardPath]
+
+	# Creates state directory if needed
+	def Configuration.prepareState
+		unless( File.directory?(StateDir) )
+			begin
+				Dir.mkdir(StateDir)
+			rescue
+				Log.log(Log::Error, "Unable to create state directory!")
+				return false
+			end
+		end
+		return true
+	end
+
+	def Configuration.clearState
+		for f in StateFiles
+			if( File.exists?(f) )
+				begin
+					File.delete(f)
+				rescue
+					Log.log(Log::Warning, "Unable to delete file '" + f + "'!")
+			end
+		end
+	end
+
+	# Returns true if all state files exist
+	def Configuration.stateExists?()
+		for f in StateFiles
+			unless( File.exists?(f) )
+				return false
+			end
+		end
+		return true
+	end
 end

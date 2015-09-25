@@ -6,6 +6,7 @@
 
 require 'base64'
 require 'digest'
+require 'thread'
 
 PasswordSalt = "jk}ldh1qVzMT~E.p"
 
@@ -28,25 +29,54 @@ class User
 	def username
 		return Base64.strict_decode64(@username)
 	end
-
 end
 
-# Checks if a provided username and password are valid
-def validLogin?(userlist, username, password)
-	for u in userlist
-		if( u.username == username )
-			return u.validPassword(password)
-		end
-	end
-	return false
-end
+module Users
+	$users = []
+	$userlock = Mutex.new
 
-# Checks if a given user is in a list
-def userExists?(userlist, username)
-	for u in userlist
-		if( u.username == username )
-			return true
-		end
+	# Checks if a provided username and password are valid
+	def Users.validLogin?(username, password)
+		$userlock.synchronize {
+			for u in $users
+				if( u.username == username )
+					return u.validPassword(password)
+				end
+			end
+		}
+		return false
 	end
-	return false
+
+	def Users.userExists?(username)
+		$userlock.synchronize {
+			for u in $users
+				if( u.username == username )
+					return true
+				end
+			end
+		}
+		return false
+	end
+
+	# Attempts to add user to userlist, returns true on success
+	def Users.addUser(u)
+		if( u.class != User )
+			raise TypeError, "Can only add users to the userlist!"
+		end
+		$userlock.synchronize {
+			# WARNING: Don't check using userExists?, you'll make a deadlock!
+			for u in $users
+				if( u.username == username )
+					return false
+				end
+			end
+			begin
+				$users.push(u)
+			rescue
+				Log.log(Log::Error, "Cannot add user to end of list!")
+				return false
+			end
+		}
+		return true
+	end
 end

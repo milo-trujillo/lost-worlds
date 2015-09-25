@@ -1,3 +1,8 @@
+=begin
+	This file contains the code for handling client network connections.
+	For information about each user, try user.rb.
+=end
+
 require 'thread'
 require 'socket'
 
@@ -14,31 +19,32 @@ end
 
 # Interprets logging in or creating a new user
 def handleLogin(auth)
-	$userlock.synchronize {
-		case auth
-			# login:username:password
-			when /^login:[\w]+:[\w]+$/
-				username, password = auth.split(':')[1,2]
-				if( validLogin?($users, username, password) )
-					Log.log(Log::Info, "User " + username + " logged in")
-					return username
-				else
-					return nil
-				end
-			# register:username:password
-			when /^register:[\w]+:[\w]+$/
-				username, password = auth.split(':')[1,2]
-				Log.log(Log::Debug, "Registering user: " + username)
-				if( userExists?($users, username) )
-					return nil
-				else
-					$users.push(User.new(username, password))
+	case auth
+		# login:username:password
+		when /^login:[\w]+:[\w]+$/
+			username, password = auth.split(':')[1,2]
+			if( Users.validLogin?(username, password) )
+				Log.log(Log::Info, "User '" + username + "' logged in")
+				return username
+			else
+				return nil
+			end
+		# register:username:password
+		when /^register:[\w]+:[\w]+$/
+			username, password = auth.split(':')[1,2]
+			Log.log(Log::Debug, "Registering user: " + username)
+			if( Users.userExists?(username) )
+				return nil
+			else
+				if( Users.addUser(User.new(username, password)) )
 					Log.log(Log::Info, "Registered user: " + username)
 					return username
+				else
+					return nil
 				end
-		end
-		return nil
-	}
+			end
+	end
+	return nil
 end
 
 def handleCommand(s, command)
