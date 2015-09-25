@@ -10,6 +10,7 @@
 require 'socket'
 require 'thread'
 require_relative 'config'
+require_relative 'board'
 require_relative 'log'
 require_relative 'client'
 
@@ -27,6 +28,7 @@ def handleInt
 	Log.log(Log::Info, "Saving state...")
 	Configuration.prepareState()
 	Board.save(Configuration::BoardPath)
+	Users.save(Configuration::UserPath)
 	Log.log(Log::Info, "Quitting...")
 	exit(0)
 end
@@ -37,6 +39,7 @@ if __FILE__ == $0
 	# Restore from disk or create new universe
 	if( Configuration.stateExists? )
 		Board.load(Configuration::BoardPath)
+		Users.load(Configuration::UserPath)
 		Configuration.clearState
 	else
 		Board.generate

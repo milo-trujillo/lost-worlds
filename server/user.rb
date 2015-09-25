@@ -1,24 +1,26 @@
 #!/usr/bin/env ruby
 
 =begin
-	The user class stores authentication data for each account.
+	The User class stores authentication data for each account.
+	The Users module stores the database of users and provides methods to 
+	interact with that database.
 =end
 
 require 'base64'
 require 'digest'
 require 'thread'
+require 'zlib'
+require 'yaml'
 
-PasswordSalt = "jk}ldh1qVzMT~E.p"
 
 class User
-
 	def initialize(username, password)
 		@username = Base64.strict_encode64(username)
-		@password = Digest::SHA256.hexdigest(password + PasswordSalt)
+		@password = Digest::SHA256.hexdigest(password + Users::Salt)
 	end
 
 	def validPassword(password)
-		if( @password == Digest::SHA256.hexdigest(password + PasswordSalt) )
+		if( @password == Digest::SHA256.hexdigest(password + Users::Salt) )
 			return true
 		else
 			return false
@@ -32,6 +34,7 @@ class User
 end
 
 module Users
+	Salt = "jk}ldh1qVzMT~E.p"
 	$users = []
 	$userlock = Mutex.new
 
@@ -78,5 +81,27 @@ module Users
 			end
 		}
 		return true
+	end
+
+	def Users.save(filename)
+		f = File.open(filename, "w")
+		userblob = ""
+		$userlock.synchronize {
+			userblob = YAML.dump($users)
+		}
+		f.puts(Zlib::Deflate.deflate(userblob))
+		f.close()
+		Log.log(Log::Info, "Saved users to file '" + filename + "'")
+	end
+
+	def Users.load(filename)
+		f = File.open(filename, "r")
+		userblob = Zlib::Inflate.inflate(f.read)
+		$userlock.synchronize {
+			$users.clear()
+			$users = YAML.load(userblob)
+		}
+		f.close()
+		Log.log(Log::Info, "Restored users from file '" + filename + "'")
 	end
 end

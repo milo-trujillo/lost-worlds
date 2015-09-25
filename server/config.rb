@@ -59,6 +59,7 @@ module Configuration
 					File.delete(f)
 				rescue
 					Log.log(Log::Warning, "Unable to delete file '" + f + "'!")
+				end
 			end
 		end
 	end

@@ -38,6 +38,7 @@ module Board
 					Log.log(Log::Debug, "Created " + tiles + " tiles")
 				end
 			end
+			Log.log(Log::Info, "World generation complete.")
 		}
 	end
 
@@ -66,7 +67,7 @@ module Board
 
 	def Board.load(filename)
 		f = File.open(filename, "r")
-		boardblob = Zlib::Inflate.inflate(f.gets)
+		boardblob = Zlib::Inflate.inflate(f.read)
 		$boardLock.synchronize {
 			$board.clear()
 			$board = YAML.load(boardblob)
