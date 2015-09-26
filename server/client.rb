@@ -47,11 +47,14 @@ def handleLogin(auth)
 	return nil
 end
 
-def handleCommand(s, command)
+def handleCommand(s, username, command)
 	case command
 		# description
 		when /^description+$/
 			getDescription(s)
+		when /^move:\d$/
+			result = Orders.move(username, command.split(':')[1])
+			s.puts(result)
 		else
 			s.puts("UNKNOWN COMMAND")
 	end
@@ -66,7 +69,7 @@ def handleClient(s)
 	begin
 		Log.log(Log::Info, "New client connected!")
 		s.puts("Hello user. Welcome to Lost Worlds.")
-		loggedIn = false # We'll handle some kind of account system later
+		username = nil
 		if( (! s.closed?) && command = s.gets )
 			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
 			username = handleLogin(command)
@@ -81,7 +84,7 @@ def handleClient(s)
 		end
 		if( (! s.closed?) && command = s.gets )
 			command = command.gsub(/[^\w\d :]/, '') # Strip unwanted chars
-			handleCommand(s, command)
+			handleCommand(s, username, command)
 		end
 		unless( s.closed? )
 			s.close()
