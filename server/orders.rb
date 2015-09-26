@@ -25,7 +25,7 @@ module Orders
 	def Orders.move(username, location)
 		if( location < 0 || location > 5 )
 			return "Error: Destination invalid"
-		else
+		end
 		u = Users.getUser(username)
 		if( u == nil )
 			return "Error: User does not exist"
@@ -40,27 +40,31 @@ module Orders
 		}
 	end
 
-	def Orders.evaluate()
+	def Orders.evaluate
 		# STOP! Hammer time.
-		$orderlock.synchronize {
-			while( order = $orders.shift )
+		$orderlock.synchronize do
+			while( true )
+				order = $orders.shift
+				if( order == nil )
+					break
+				end
 				type = order[0]
 				args = order[1]
 				case type
-					when Move
-						u = Users.getUser(args[0])
-						if( u != nil )
-							u.row = args[1]
-							u.col = args[2]
-						end
-					else
-						raise "Unknown command entered!"
+				when Move
+					u = Users.getUser(args[0])
+					if( u != nil )
+						u.row = args[1]
+						u.col = args[2]
+					end
+				else
+					raise "Unknown command entered!"
 				end
 			end
 			Log.log(Log::Debug, "Processing turn " + $turnNumber.to_s)
 			# TODO: Maybe make a non-debug announcement when an hour has passed?
-			$turnNumber++
-		}
+			$turnNumber += 1
+		end
 	end
 
 	def Orders.save(filename)
@@ -84,5 +88,4 @@ module Orders
 		f.close()
 		Log.log(Log::Info, "Restored orders from file '" + filename + "'")
 	end
-
 end
