@@ -10,8 +10,27 @@ require_relative 'user'
 require_relative 'log'
 
 # Returns a description of the current game board
-def getDescription(s)
+# To get a description we try a depth-2 recursive search from the player
+# location, adding each adjacent tile to a set
+def getDescription(s, username)
 	begin
+		tiles = Set.new
+		(row, col) = Users.position(username)
+		tiles.add([row, col])
+		for d in (0 .. 6)
+			tiles.add(adjoiningTile(row, col, d))
+		end
+		tmp = tiles
+		tmp.each do |t|
+			for d in (0 .. 6)
+				tiles.add(adjoiningTile(t[0], t[1], d))
+			end
+		end
+		puts tiles.to_s
+		for t in tiles
+			tile = Board.getTile(t[0], t[1])
+			s.puts(["Tile", tile.type, t[0], t[1], t.probability].join(':'))
+		end
 	rescue
 		Log.log(Log::Error, "Error getting description")
 	end
@@ -51,7 +70,7 @@ def handleCommand(s, username, command)
 	case command
 		# description
 		when /^description+$/
-			getDescription(s)
+			getDescription(s, username)
 		when /^move:\d$/
 			result = Orders.move(username, command.split(':')[1])
 			s.puts(result)
