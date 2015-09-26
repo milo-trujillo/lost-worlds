@@ -72,8 +72,13 @@ def handleCommand(s, username, command)
 		when /^description+$/
 			getDescription(s, username)
 		when /^move:\d$/
-			result = Orders.move(username, command.split(':')[1])
-			s.puts(result)
+			begin
+				result = Orders.move(username, command.split(':')[1].to_i)
+				s.puts(result)
+			rescue => e
+				puts "Exception during movement: " + e.message
+				puts "Backtrace: " + e.backtrace.to_s
+			end
 		else
 			s.puts("UNKNOWN COMMAND")
 	end
