@@ -34,11 +34,11 @@ def adjoiningTile(row, column, side)
 			when 0
 				return [row - 1, column - 1]
 			when 1
-				return [row - 1, column + 1]
+				return [row - 1, column]
 			when 2
 				return [row, column + 1]
 			when 3
-				return [row + 1, column + 1]
+				return [row + 1, column]
 			when 4
 				return [row + 1, column - 1]
 			when 5
