@@ -83,7 +83,7 @@ module Orders
 		orderblob = Zlib::Inflate.inflate(f.read)
 		$orderlock.synchronize {
 			$orders.clear()
-			($orders, $turnNumber) = YAML.load(userblob)
+			($orders, $turnNumber) = YAML.load(orderblob)
 		}
 		f.close()
 		Log.log(Log::Info, "Restored orders from file '" + filename + "'")

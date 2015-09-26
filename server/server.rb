@@ -35,6 +35,14 @@ def handleInt
 	exit(0)
 end
 
+# This is what executes new turns at appropriate times
+def time
+	while(true)
+		sleep(Configuration::Turnduration)
+		Orders.evaluate
+	end
+end
+
 if __FILE__ == $0
 	Log.log(Log::Info, "Starting game server...")
 
@@ -42,11 +50,14 @@ if __FILE__ == $0
 	if( Configuration.stateExists? )
 		Board.load(Configuration::BoardPath)
 		Users.load(Configuration::UserPath)
-		Orders.save(Configuration::OrderPath)
+		Orders.load(Configuration::OrderPath)
 		Configuration.clearState
 	else
 		Board.generate
 	end
+
+	# Let the world start turning...
+	Thread.start do time end
 
 	# Start up networking and let the users inside
 	server = TCPServer.open(Configuration::ListenPort)
