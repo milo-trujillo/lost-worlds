@@ -17,8 +17,8 @@ module Configuration
 	BoardWidth = 200
 	BoardHeight = 200
 	Tiletypes = ["coal", "iron", "shrooms"] 
-	# There is also an 'empty' type, not included so it isn't used during generation
-	Turnduration = 60 # Seconds between turn executions
+	# There is also a 'water' type, not included so it isn't used during generation
+	Turnduration = 5 # Seconds between turn executions
 
 	#
 	# Architecture configuration
