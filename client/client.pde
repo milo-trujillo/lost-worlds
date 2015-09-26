@@ -157,6 +157,15 @@ void mouseClicked(){
   if (screenSwitch == true){
    if ((mouseX >= x3) && (mouseX < x3+w1) && (mouseY > y3) && (mouseY < y3+h1)){
     boardChange = true; 
+    CommandList.append("description:0\n");
+    ArrayBuilder();
+    description.Switch();
+    //UserInput("description:");
+    //if (key ==ENTER){
+      //description.Switch(); // Changes the description button back to its "off" position
+    //}
+    ypos = 220;
+  }
     description.Switch();
     if (build1 == true){
       build1 = false;
@@ -190,7 +199,6 @@ void mouseClicked(){
       }
     }
     
-  }
   if ((screenSwitch == false)){ // The login button
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
       regButton = false;
@@ -260,14 +268,16 @@ void keyPressed()
     UserInput("register:"); //Calls User input function when register button is clicked
   }
  
-  if ((screenSwitch == true) && (boardChange == true))
-  {
-    UserInput("description:");
-    if (key ==ENTER){
-      description.Switch(); // Changes the description button back to its "off" position
-    }
-    ypos = 220;
-  }
+  //if ((screenSwitch == true) && (boardChange == true))
+  //{
+    //CommandList.append("description:0\n");
+    //ArrayBuilder();
+    //UserInput("description:");
+    //if (key ==ENTER){
+      //description.Switch(); // Changes the description button back to its "off" position
+    //}
+    //ypos = 220;
+  //}
   if ((screenSwitch == true) && (build1 == true))
   {
     UserInput("build:");
