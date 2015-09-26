@@ -25,58 +25,28 @@ class Tile
 
 end
 
-# Calculates the coordinates and verices overlapping a particular tile/vertex
-def adjoiningTiles(tile, vertex)
-	if( tile.is_a?(Tile) && vertex.is_a?(Integer) )
-		case vertex
+# Calculates the row / column of an adjoining tile, based on the side
+# 'sides' are numbered 0 through 5, with 0 being upper left, and moving 
+# clockwise. Returns a tuple of [row, column] for the resulting tile.
+def adjoiningTile(row, column, side)
+	if( row.is_a?(Integer) && column.is_a?(Integer) && side.is_a?(Integer) )
+		case side
 			when 0
-				return [[tile.row - 1,tile.col - 1, 2],
-					[tile.row - 1, tile.col, 4]]
+				return [row - 1, column - 1]
 			when 1
-				return [[tile.row - 1, tile.col, 3],
-					[tile.row, tile.col + 1, 5]]
+				return [row - 1, column + 1]
 			when 2
-				return [[tile.row, tile.col + 1, 4],
-					[tile.row + 1, tile.col, 0]]
+				return [row, column + 1]
 			when 3
-				return [[tile.row + 1, tile.col - 1, 1],
-					[tile.row + 1, tile.col, 5]]
+				return [row + 1, column + 1]
 			when 4
-				return [[tile.row, tile.col - 1, 2],
-					[tile.row + 1, tile.col - 1, 0]]
+				return [row + 1, column - 1]
 			when 5
-				return [[tile.row - 1, tile.col - 1, 3],
-					[tile.row, tile.col - 1, 1]]
+				return [row, column - 1]
 			else
-				raise "Invalid vertex (" + vertex.to_s + ")!"
+				raise "Invalid side (" + side.to_s + ")!"
 		end
 	else
-		raise "Expected a tile and an integer vertex"
+		raise "Expected a (row, column, side) as (int, int, int)"
 	end
-end
-
-# Checks if a given [row, col, vertex] exists on our board
-def validTile?(row, col)
-	if( row.is_a?(Integer) && col.is_a?(Integer) )
-		if( row >= 0 && row < Configuration::BoardHeight )
-			if( col >= 0 && col < Configuration::BoardWidth )
-				return true
-			end
-		end
-		return false
-	else
-		raise "Expected (row, col) as integers"
-	end
-end
-
-# Returns total number of tiles on the board
-def getTotalTiles()
-	total = 0
-	#for x in Boardsize
-		#total += x
-	#end
-	# This is a hack, eventually we'll want to get the number of legit
-	# tiles instead of the board size
-	total = Configuration::BoardWidth * Configuration::BoardHeight
-	return total
 end

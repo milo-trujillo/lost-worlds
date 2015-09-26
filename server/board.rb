@@ -51,7 +51,7 @@ module Board
 				}
 			end
 		end
-		return Tile.new("empty", 0)
+		return Tile.new("water", 0)
 	end
 
 	def Board.save(filename)
@@ -74,5 +74,20 @@ module Board
 		}
 		f.close()
 		Log.log(Log::Info, "Restored board from file '" + filename + "'")
+	end
+
+	# Returns if a location is on the board and can be moved to
+	def Board.locationMoveable?(row, col)
+		if( row < 0 || row >= Configuration::BoardHeight )
+			return false
+		end
+		if( col < 0 || col >= Configuration::BoardWidth )
+			return false
+		end
+		return true
+	end
+
+	def Board.getTotalTiles()
+		return Configuration::BoardHeight * Configuration::BoardWidth
 	end
 end
