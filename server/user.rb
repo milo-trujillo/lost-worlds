@@ -92,6 +92,9 @@ module Users
 		return true
 	end
 
+	# Note: Accessing member variables of a user is *not* threadsafe, do so at your
+	# peril! This was really added so at order evaluation time we can change the
+	# user coordinates.
 	def Users.getUser(u)
 		$userlock.synchronize {
 			for u in $users
@@ -101,6 +104,17 @@ module Users
 			end
 		}
 		return nil
+	end
+
+	def Users.position(u)
+		$userlock.syncrhonize {
+			for u in $users
+				if( u.username == username )
+					return [u.row, u.col]
+				end
+			end
+			return nil
+		}
 	end
 
 	def Users.save(filename)
