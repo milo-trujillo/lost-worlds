@@ -12,11 +12,20 @@ require 'thread'
 require 'zlib'
 require 'yaml'
 
+require_relative 'config'
 
 class User
+	attr_accessor :row
+	attr_accessor :col
+
 	def initialize(username, password)
 		@username = Base64.strict_encode64(username)
 		@password = Digest::SHA256.hexdigest(password + Users::Salt)
+		# For now, player starting location is a random spot on the board
+		# In the future we may want a more intelligent start point,
+		# or at least make sure not to spawn on top of someone else.
+		@row = rand(Configuration::BoardHeight)
+		@col = rand(Configuration::BoardWidth)
 	end
 
 	def validPassword(password)
@@ -81,6 +90,17 @@ module Users
 			end
 		}
 		return true
+	end
+
+	def Users.getUser(u)
+		$userlock.synchronize {
+			for u in $users
+				if( u.username == username )
+					return u
+				end
+			end
+		}
+		return nil
 	end
 
 	def Users.save(filename)
