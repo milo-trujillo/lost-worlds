@@ -95,7 +95,7 @@ module Users
 	# Note: Accessing member variables of a user is *not* threadsafe, do so at your
 	# peril! This was really added so at order evaluation time we can change the
 	# user coordinates.
-	def Users.getUser(u)
+	def Users.getUser(username)
 		$userlock.synchronize {
 			for u in $users
 				if( u.username == username )

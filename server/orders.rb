@@ -30,8 +30,8 @@ module Orders
 		if( u == nil )
 			return "Error: User does not exist"
 		end
-		(row, col) = adjoiningTile(u.row, u.col)
-		if( not Board.locationPassable?(row, col) )
+		(row, col) = adjoiningTile(u.row, u.col, location)
+		if( not Board.locationMoveable?(row, col) )
 			return "Error: Destination impossible"
 		end
 		$orderlock.synchronize {
