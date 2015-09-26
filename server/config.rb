@@ -37,7 +37,8 @@ module Configuration
 	StateDir = "./state"
 	UserPath = StateDir + "/users.db"
 	BoardPath = StateDir + "/board.db"
-	StateFiles = [UserPath, BoardPath]
+	OrderPath = StateDir + "/orders.db"
+	StateFiles = [UserPath, BoardPath, OrderPath]
 
 	# Creates state directory if needed
 	def Configuration.prepareState

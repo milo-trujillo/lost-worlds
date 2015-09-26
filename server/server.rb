@@ -29,6 +29,7 @@ def handleInt
 	Configuration.prepareState()
 	Board.save(Configuration::BoardPath)
 	Users.save(Configuration::UserPath)
+	Orders.save(Configuration::OrderPath)
 	Log.log(Log::Info, "Quitting...")
 	exit(0)
 end
@@ -40,6 +41,7 @@ if __FILE__ == $0
 	if( Configuration.stateExists? )
 		Board.load(Configuration::BoardPath)
 		Users.load(Configuration::UserPath)
+		Orders.save(Configuration::OrderPath)
 		Configuration.clearState
 	else
 		Board.generate

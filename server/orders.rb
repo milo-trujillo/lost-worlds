@@ -6,10 +6,13 @@
 =end
 
 require 'thread'
+require 'zlib'
+require 'yaml'
 
 require_relative 'board'
 require_relative 'user'
 require_relative 'tile'
+require_relative 'log'
 
 module Orders
 	$orders = []
@@ -59,5 +62,27 @@ module Orders
 			$turnNumber++
 		}
 	end
-	
+
+	def Orders.save(filename)
+		f = File.open(filename, "w")
+		orderblob = ""
+		$orderlock.synchronize {
+			orderblob = YAML.dump([$orders, $turnNumber])
+		}
+		f.puts(Zlib::Deflate.deflate(orderblob))
+		f.close()
+		Log.log(Log::Info, "Saved orders to file '" + filename + "'")
+	end
+
+	def Orders.load(filename)
+		f = File.open(filename, "r")
+		orderblob = Zlib::Inflate.inflate(f.read)
+		$orderlock.synchronize {
+			$orders.clear()
+			($orders, $turnNumber) = YAML.load(userblob)
+		}
+		f.close()
+		Log.log(Log::Info, "Restored orders from file '" + filename + "'")
+	end
+
 end
