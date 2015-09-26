@@ -13,6 +13,7 @@ require_relative 'config'
 require_relative 'board'
 require_relative 'log'
 require_relative 'client'
+require_relative 'orders'
 
 # This is a hack for handling repeated signals, as described here:
 # http://www.sitepoint.com/the-self-pipe-trick-explained/
