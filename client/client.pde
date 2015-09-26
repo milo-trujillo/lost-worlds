@@ -15,6 +15,7 @@ String dataIntake;
 String userInput = "";
 int i;
 Tile[] TileArray = new Tile[19];
+Button[] CenterButtonArray = new Button[6];
 boolean screenSwitch = false;
 PImage menu;
 PImage gameScreen;
@@ -48,11 +49,12 @@ int y3 = 130;
 int x4 = 55;
 int y4 = 600;
 
+
 Button login = new Button("login1.png","login2.png",x1,y1,false);
 Button register = new Button("reg1.png","reg2.png",x2,y2,false);
 Button description = new Button("d1.png","d2.png",x3,y3,false);
 Button build = new Button("build1.png","build2.png",x4,y4,false);
-
+//Button h0 = new Button("water.png","test.png",
 
 
 // positions of text
@@ -115,6 +117,20 @@ void draw()
     text(userInput,220,ypos);
     //Need another for loop like this one to display the array of built stuff
     //Controls display of tiles
+   
+    try{
+   CenterButtonArray[0] = new Button("test.png","test.png",TileArray[4].getX(),TileArray[4].getY(),false);
+   CenterButtonArray[1] = new Button("test.png","test.png",TileArray[5].getX(),TileArray[5].getY(),false);
+   CenterButtonArray[2] = new Button("test.png","test.png",TileArray[8].getX(),TileArray[8].getY(),false);
+   CenterButtonArray[3] = new Button("test.png","test.png",TileArray[10].getX(),TileArray[10].getY(),false);
+   CenterButtonArray[4] = new Button("test.png","test.png",TileArray[13].getX(),TileArray[13].getY(),false);
+   CenterButtonArray[5] = new Button("test.png","test.png",TileArray[14].getX(),TileArray[14].getY(),false);
+   }
+   catch(Exception e){
+     print(e);
+    return; 
+    }
+  
     for (int i = 0; i < TileArray.length; i++)
     {
       if (TileArray[i] == null)
@@ -124,8 +140,16 @@ void draw()
       TileArray[i].converter();
       TileArray[i].display();
     }
+  for (int i = 0; i < CenterButtonArray.length; i++)
+  {
+    if (CenterButtonArray[i] == null)
+    {
+      print("Something wrong");
+      continue;
+    }
+    CenterButtonArray[i].display();
+    }
   }
-  
 }
 //Responsible for command button switches, along with the screen switch
 void mouseClicked(){ 
@@ -147,8 +171,25 @@ void mouseClicked(){
       boardChange = false;
       description.Switch();
     }
+   }
+    //All the movement buttons
+    for (int i = 0; i < CenterButtonArray.length; i++)
+    {
+      if (CenterButtonArray[i] == null)
+      {
+        continue;
+      } //Get2X(); Get2Y();
+      //if mouseX and mouseY are a certain distance from CenterButtonArray[i].Get2X(); and CenterButtonArray[i].Get2Y();
+      if ( dist(CenterButtonArray[i].get2X()+75,CenterButtonArray[i].get2Y()+75,mouseX,mouseY) <= 75)
+      {
+        print("*&*They clicked in the circle!!");
+        CenterButtonArray[i].Switch();
+        print("I switched!");
+        CenterButtonArray[i].Switch();
+        print("I'm a button again!"); 
+      }
+    }
     
-   } 
   }
   if ((screenSwitch == false)){ // The login button
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
@@ -289,7 +330,7 @@ void ArrayBuilder() //Responsible for constructing tile arrays, along with openi
   BufferedReader in;
   try
   { //Connecting to the server stuff
-   myClient= new Socket("50.184.155.187",2345);
+   myClient= new Socket("128.113.138.14",2345);
    myClient.setSoTimeout(3000);
    out = new PrintWriter(myClient.getOutputStream(), true);
    in = new BufferedReader(new InputStreamReader(myClient.getInputStream()));
@@ -362,6 +403,19 @@ void ArrayBuilder() //Responsible for constructing tile arrays, along with openi
     break; 
    }
  }
+ //Fill in 6 buttons here with Tile array info
+ try{
+   CenterButtonArray[0] = new Button("test.png","water.png",TileArray[4].getX(),TileArray[4].getY(),false);
+   CenterButtonArray[1] = new Button("test.png","water.png",TileArray[5].getX(),TileArray[5].getY(),false);
+   CenterButtonArray[2] = new Button("test.png","water.png",TileArray[8].getX(),TileArray[8].getY(),false);
+   CenterButtonArray[3] = new Button("test.png","water.png",TileArray[13].getX(),TileArray[13].getY(),false);
+   CenterButtonArray[4] = new Button("test.png","water.png",TileArray[14].getX(),TileArray[14].getY(),false);
+   
+ }
+ catch(Exception e){
+  //print(e);
+  return; 
+ }
 }
 /*
 //The hypothetical class for the built stuff... I need to know how they're being 
@@ -415,6 +469,8 @@ class Tile
  void display()
  {
    image(loadImage(name),xpos,ypos);
+   //Button h0 = new Button("test.png","test.png",xpos,ypos,false); //Creates clickable pseudo tile buttons
+   //h0.display();
    //rectMode(CENTER);
    fill(255);
    ellipse(xpos+75,ypos+100,25,25); //originally 50 50
@@ -426,6 +482,12 @@ class Tile
    text(prob,xpos+61,ypos+108);  
    }
  }
+ public final int getX(){
+  return xpos; 
+ }
+ public final int getY(){
+  return ypos; 
+ }
 }
 
 class Button{ //Class for buttons, which control their imagery, being turned on/off, and position. 
@@ -433,21 +495,21 @@ class Button{ //Class for buttons, which control their imagery, being turned on/
  String namePlaceholder;
  String name;
  String name2;
- int ypos;
- int xpos; 
+ int y2pos;
+ int x2pos; 
  Button ( String nameTemp,String nameTemp2,int xposTemp, int yposTemp, boolean clickedTemp){
    clicked = clickedTemp;
    name = nameTemp;
    name2 = nameTemp2;
-   ypos = yposTemp;
-   xpos = xposTemp;
+   y2pos = yposTemp;
+   x2pos = xposTemp;
  }
  void display(){
    if (clicked == false){
-     image(loadImage(name),xpos,ypos); 
+     image(loadImage(name),x2pos,y2pos); 
    }
   if (clicked== true){
-     image(loadImage(name2),xpos,ypos);
+     image(loadImage(name2),x2pos,y2pos);
    }
  }
  void Switch(){
@@ -458,5 +520,11 @@ class Button{ //Class for buttons, which control their imagery, being turned on/
    if (clicked == false){
      clicked = true; 
    }
+ }
+ public final int get2X(){
+  return x2pos; 
+ }
+ public final int get2Y(){
+  return y2pos; 
  }
 }
