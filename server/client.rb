@@ -5,6 +5,7 @@
 
 require 'thread'
 require 'socket'
+require 'set'
 
 require_relative 'user'
 require_relative 'log'
@@ -17,22 +18,21 @@ def getDescription(s, username)
 		tiles = Set.new
 		(row, col) = Users.position(username)
 		tiles.add([row, col])
-		for d in (0 .. 6)
+		for d in (0 .. 5)
 			tiles.add(adjoiningTile(row, col, d))
 		end
-		tmp = tiles
+		tmp = tiles.clone() # Make a shallow copy
 		tmp.each do |t|
-			for d in (0 .. 6)
+			for d in (0 .. 5)
 				tiles.add(adjoiningTile(t[0], t[1], d))
 			end
 		end
-		puts tiles.to_s
 		for t in tiles
 			tile = Board.getTile(t[0], t[1])
-			s.puts(["Tile", tile.type, t[0], t[1], t.probability].join(':'))
+			s.puts(["Tile", tile.type, t[0], t[1], tile.probability].join(':'))
 		end
-	rescue
-		Log.log(Log::Error, "Error getting description")
+	rescue => e
+		Log.log(Log::Error, "Error getting description: " + e.message)
 	end
 end
 
