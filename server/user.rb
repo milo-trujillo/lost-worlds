@@ -106,8 +106,8 @@ module Users
 		return nil
 	end
 
-	def Users.position(u)
-		$userlock.syncrhonize {
+	def Users.position(username)
+		$userlock.synchronize {
 			for u in $users
 				if( u.username == username )
 					return [u.row, u.col]
