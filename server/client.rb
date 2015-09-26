@@ -29,7 +29,8 @@ def getDescription(s, username)
 		end
 		for t in tiles
 			tile = Board.getTile(t[0], t[1])
-			s.puts(["Tile", tile.type, t[0], t[1], tile.probability].join(':'))
+			(r, c) = centerCoordinates(t[0], t[1], row, col)
+			s.puts(["Tile", tile.type, r, c, tile.probability].join(':'))
 		end
 	rescue => e
 		Log.log(Log::Error, "Error getting description: " + e.message)

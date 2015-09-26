@@ -91,3 +91,12 @@ module Board
 		return Configuration::BoardHeight * Configuration::BoardWidth
 	end
 end
+
+# This centers the coordinates of a tile around the location of the user,
+# such that the player is at 2,2, and rows and columns start at 0
+def centerCoordinates(row, col, userRow, userCol)
+	originRow = userRow - 2
+	originCol = userCol - 2
+	# Originrow and col will be '0,0' for our centered player map
+	return [row-originRow, col-originCol]
+end
