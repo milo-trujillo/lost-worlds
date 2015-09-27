@@ -216,6 +216,11 @@ void mouseClicked(){
       }
       regButton = false;
       login.Switch(); //triggers image switch for the button
+      if ((usernameT.length()>0)|| passwordT.length()>0){
+        usernameT = "";
+        passwordT = "";
+        tmp = "";
+      }
       //register.Switch();
       fill(0);
       xv = 150;
@@ -243,6 +248,11 @@ void mouseClicked(){
       loginButton = false;
       register.Switch();
       fill(0);
+       if ((usernameT.length()>0)|| passwordT.length()>0){
+          usernameT = "";
+          passwordT = "";
+          tmp = "";
+        }
       xv = 150;
       yv = 675;
       xv2 = 150;
