@@ -120,7 +120,7 @@ void draw()
     fill(120,120,120);
     fill(0,200,200);
     description.display();
-    build.display();
+    //build.display();
     fill(0);
     textSize(20);
     text(userInput,220,ypos);
@@ -173,22 +173,22 @@ void mouseClicked(){
       //description.Switch(); // Changes the description button back to its "off" position
     //}
     ypos = 220;
-  }
     description.Switch();
-    if (build1 == true){
-      build1 = false;
-      build.Switch();
+    //if (build1 == true){
+      //build1 = false;
+      //build.Switch();
     }
 // The Build button
+   //}
+   //if ((mouseX >= x4) && (mouseX < x4+w2) && (mouseY > y4) && (mouseY < y4+h2)){
+    //build1 = true; 
+    //build.Switch();
+    //if (boardChange == true){
+      //boardChange = false;
+      //description.Switch();
+    //}
    }
-   if ((mouseX >= x4) && (mouseX < x4+w2) && (mouseY > y4) && (mouseY < y4+h2)){
-    build1 = true; 
-    build.Switch();
-    if (boardChange == true){
-      boardChange = false;
-      description.Switch();
-    }
-   }
+
     //All the movement buttons
     for (int i = 0; i < CenterButtonArray.length; i++)
     {
@@ -269,8 +269,8 @@ void mouseClicked(){
       }
      }
   }
-}
-
+  }
+//}
 //Responsible for constructing user input into a string, making backspace work, having username/passwords be a thing, setting positions of user input text on screen, recording the user's input
 void keyPressed()
 { //This block is respomsible for recording user input only on the main menu screen, after the login button or the register button has been clicked.
@@ -330,15 +330,15 @@ void keyPressed()
     //}
     //ypos = 220;
   //}
-  if ((screenSwitch == true) && (build1 == true))
-  {
-    UserInput("build:");
-    if (key ==ENTER){
-      build.Switch(); //Sets the build button to its off position.
-    }
-    ypos = 600;
+  //if ((screenSwitch == true) && (build1 == true))
+  ///{
+    //UserInput("build:");
+   // if (key ==ENTER){
+      //build.Switch(); //Sets the build button to its off position.
+    //}
+    //ypos = 600;
   }
-}
+//}
 //Responsible for preparing user input to send to the server/calling array builder to construct the tile arrays.... 
 void UserInput(String type)
 {
@@ -372,7 +372,7 @@ void UserInput(String type)
     //print(RowList);
     userInput = "";
     boardChange = false;
-    build1 = false;
+    //build1 = false;
   }
   if ((key!='\n') && (keyCode!= SHIFT) && (keyCode != BACKSPACE))
   {
