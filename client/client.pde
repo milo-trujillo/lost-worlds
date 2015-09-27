@@ -127,7 +127,7 @@ void draw()
    CenterButtonArray[5] = new Button("test.png","test.png",TileArray[14].getX(),TileArray[14].getY(),false);
    }
    catch(Exception e){
-     print(e);
+     //print(e);
     return; 
     }
   
@@ -157,7 +157,7 @@ void mouseClicked(){
   if (screenSwitch == true){
    if ((mouseX >= x3) && (mouseX < x3+w1) && (mouseY > y3) && (mouseY < y3+h1)){
     boardChange = true; 
-    CommandList.append("description:0\n");
+    CommandList.append("description\n");
     ArrayBuilder();
     description.Switch();
     //UserInput("description:");
@@ -194,6 +194,8 @@ void mouseClicked(){
         print("*&*They clicked in the circle!!");
         CenterButtonArray[i].Switch();
         print("I switched!");
+        CommandList.append(("move:"+i+"\n"));
+        ArrayBuilder();
         CenterButtonArray[i].Switch();
         print("I'm a button again!"); 
       }
@@ -387,7 +389,7 @@ void ArrayBuilder() //Responsible for constructing tile arrays, along with openi
  
      print("<"+line+">");
      print(line.length());
-    if (line.length() == 17){
+    if (line.equals("Login successful.")){
      //print ("screenswitch is true");
         screenSwitch = true;
         savedName = userInput;
@@ -483,13 +485,18 @@ class Tile
    //h0.display();
    //rectMode(CENTER);
    fill(255);
-   ellipse(xpos+75,ypos+100,25,25); //originally 50 50
-   fill(0);
-   if (prob.length() == 1){
-   text(prob,xpos+70,ypos+108);
-   }
-   if (prob.length() == 2){
-   text(prob,xpos+61,ypos+108);  
+   if (prob.equals("0")){
+     //print("hai, it's not equal");
+   } else{
+     ellipse(xpos+75,ypos+100,25,25);  
+   //originally 50 50
+     fill(0);
+     if (prob.length() == 1){
+     text(prob,xpos+70,ypos+108);
+     }
+     if (prob.length() == 2){
+     text(prob,xpos+61,ypos+108);  
+     }
    }
  }
  public final int getX(){
