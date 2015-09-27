@@ -1,10 +1,7 @@
 // Lost Worlds Client Code, written/put together by Amanda Howanice and Milo Trujillo
 //To do: adjust buttons/fonts, figure out how to build stuff...
 /*
-Goals for building stuff:
-Create class that makes building objects, have server make array of built things, 
-cycle through the built things and display them (function inside the Building class, add UI to have the user be able to select
-vertices rather than manually entering which they want to build. 
+ 
 */
 import processing.net.*;
 import java.io.*;
@@ -26,6 +23,7 @@ String passwordT = "";
 String passwordS = "";
 String savedName;
 
+PFont font1;
 //Button variables:
 
 //Login Button
@@ -34,6 +32,14 @@ int h1 = 100;
 int x1 = 50;
 int y1 = 500;
 boolean boardChange = false;
+
+//Login Button Font Variables:
+int xv = 100;
+int yv = 600;
+
+//Register Button Text Variables:
+int xv2 = 100;
+int yv2 = 100;
 
 // Register button
 int w2 = 200;
@@ -84,6 +90,8 @@ void setup()
   userInput = "";
   //print("HAI");
   background(menu);
+  font1 = createFont("Rosewood.ttf",20);
+  textFont(font1);
   for (int i = 0; i < RowList.length; i++){
     print(RowList[i]);
   }
@@ -95,13 +103,14 @@ void draw()
 { //Menu Screen Stuff
   if (screenSwitch == false){
     background(menu);
-    textSize(40);
-    text(usernameT,300,550);
-    text(tmp,300,600); 
-    text(usernameS, 575,600);
-    text(passwordS,575,700);
+    textSize(20);
     login.display();
     register.display();
+    text(usernameT,xv,yv); //originally 150 525
+    text(tmp,xv2,yv2); //originally 150, 590
+    text(usernameS, 575,600);
+    text(passwordS,575,700);
+    
     
   }
   if (screenSwitch == true)
@@ -115,7 +124,6 @@ void draw()
     fill(0);
     textSize(20);
     text(userInput,220,ypos);
-    //Need another for loop like this one to display the array of built stuff
     //Controls display of tiles
    
     try{
@@ -203,8 +211,23 @@ void mouseClicked(){
     
   if ((screenSwitch == false)){ // The login button
     if ((mouseX >= x1) && (mouseX < x1+w1) && (mouseY > y1) && (mouseY < y1+h1)){
+      if (regButton == true){
+        register.Switch();
+      }
       regButton = false;
       login.Switch(); //triggers image switch for the button
+      //register.Switch();
+      fill(0);
+      xv = 150;
+      yv = 525;
+      xv2 = 150;
+      yv2 = 590;
+      //if (regButton == false){
+        //if ((regButton == false) && loginButton == false){
+        //return;
+      //}
+        //register.Switch();
+      //}
       if (loginButton == false){
         loginButton = true;
         return;
@@ -213,12 +236,29 @@ void mouseClicked(){
         loginButton = false;
       }
     }
-  }
     if ((mouseX >= x2) && (mouseX < x2+w2) && (mouseY > y2) && (mouseY < y2+h2)){ // The register button
-      regButton = true;
+      if ((loginButton == true)){
+        login.Switch();
+      }
       loginButton = false;
-      register.Switch(); 
-   }
+      register.Switch();
+      fill(0);
+      xv = 150;
+      yv = 675;
+      xv2 = 150;
+      yv2 = 740;
+      //if (loginButton == true){
+        //login.Switch();
+      //}
+      if (regButton == false){
+        regButton = true;
+        return;
+      }
+      if (regButton == true){
+        regButton = false;
+      }
+     }
+  }
 }
 
 //Responsible for constructing user input into a string, making backspace work, having username/passwords be a thing, setting positions of user input text on screen, recording the user's input
@@ -263,10 +303,10 @@ void keyPressed()
      tmp = tmp+"*";
     } 
   } 
-    if ((screenSwitch == false) && (loginButton == true)){
+    if ((screenSwitch == false) && (loginButton == true) && (regButton ==false)){
     UserInput("login:"); //Calls User Input function when login button is clicked
   }
-  if ((screenSwitch == false) && (regButton == true)){
+  if ((screenSwitch == false) && (regButton == true) && (loginButton ==false)){
     UserInput("register:"); //Calls User input function when register button is clicked
   }
  
