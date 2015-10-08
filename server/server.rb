@@ -57,13 +57,14 @@ if __FILE__ == $0
 	end
 
 	# Let the world start turning...
-	Thread.start do time end
+	clock = Thread.start do time end
 
 	# Start up networking and let the users inside
 	server = TCPServer.open(Configuration::ListenPort)
 	while(true)
 		case SIGNAL_QUEUE.pop
 		when :INT
+			clock.exit # Stop time, we've got to dump to disk
 			handleInt
 		else
 			begin
