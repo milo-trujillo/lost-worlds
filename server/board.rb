@@ -2,8 +2,6 @@
 
 require 'thread'
 require 'zlib'
-require 'yaml'
-# The last two are for saving / restoring from disk.
 
 require_relative 'config'
 require_relative 'tile'
@@ -58,7 +56,7 @@ module Board
 		f = File.open(filename, "w")
 		boardblob = ""
 		$boardLock.synchronize {
-			boardblob = YAML.dump($board)
+			boardblob = Marshal.dump($board)
 		}
 		f.puts(Zlib::Deflate.deflate(boardblob))
 		f.close()
@@ -70,7 +68,7 @@ module Board
 		boardblob = Zlib::Inflate.inflate(f.read)
 		$boardLock.synchronize {
 			$board.clear()
-			$board = YAML.load(boardblob)
+			$board = Marshal.load(boardblob)
 		}
 		f.close()
 		Log.log(Log::Info, "Restored board from file '" + filename + "'")
