@@ -115,8 +115,8 @@ def handleClient(s)
 			s.close()
 		end
 		Log.log(Log::Debug, "Client disconnected")
-	rescue
-		Log.log(Log::Warning, "Client failure")
+	rescue => e
+		Log.log(Log::Warning, "Client failure: #{e.message}")
 		unless( s.closed? )
 			s.close()
 		end
