@@ -71,19 +71,19 @@ module Users
 	end
 
 	# Attempts to add user to userlist, returns true on success
-	def Users.addUser(u)
-		if( u.class != User )
+	def Users.addUser(user)
+		if( user.class != User )
 			raise TypeError, "Can only add users to the userlist!"
 		end
 		$userlock.synchronize {
 			# WARNING: Don't check using userExists?, you'll make a deadlock!
 			for u in $users
-				if( u.username == username )
+				if( u.username == user.username )
 					return false
 				end
 			end
 			begin
-				$users.push(u)
+				$users.push(user)
 			rescue
 				Log.log(Log::Error, "Cannot add user to end of list!")
 				return false
