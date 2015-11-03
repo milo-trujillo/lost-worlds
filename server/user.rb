@@ -15,7 +15,6 @@ require 'yaml'
 require_relative 'config'
 
 class User
-	attr_reader :username
 	attr_accessor :row
 	attr_accessor :col
 
@@ -38,7 +37,7 @@ class User
 	end
 
 	# We store the username base64 encoded so we can safely use YAML later
-	def username
+	def username()
 		return Base64.strict_decode64(@username)
 	end
 end
