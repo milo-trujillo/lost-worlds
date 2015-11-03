@@ -27,7 +27,7 @@ def getDescription(s, username)
 				tiles.add(adjoiningTile(t[0], t[1], d))
 			end
 		end
-		for t in tiles
+		for t in tiles.sort_by { |x|  [ x[0], x[1] ] }
 			tile = Board.getTile(t[0], t[1])
 			(r, c) = centerCoordinates(t[0], t[1], row, col)
 			s.puts(["Tile", tile.type, r, c, tile.probability].join(':'))
