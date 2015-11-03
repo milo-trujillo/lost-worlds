@@ -34,6 +34,7 @@ module Orders
 		if( not Board.locationMoveable?(row, col) )
 			return "Error: Destination impossible"
 		end
+		Log.log(Log::Debug, "Attempting move from #{u.row},#{u.col} to #{row},#{col}")
 		$orderlock.synchronize {
 			$orders.push([Move, [username, row, col]])
 			return "Success: Move command accepted"
