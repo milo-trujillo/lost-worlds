@@ -15,6 +15,7 @@ require 'yaml'
 require_relative 'config'
 
 class User
+	attr_reader :username
 	attr_accessor :row
 	attr_accessor :col
 
