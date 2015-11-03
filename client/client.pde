@@ -93,7 +93,7 @@ void setup()
   font1 = createFont("Rosewood.ttf",20);
   textFont(font1);
   for (int i = 0; i < RowList.length; i++){
-    print(RowList[i]);
+    //print(RowList[i]);
   }
 
 }
@@ -165,7 +165,11 @@ void mouseClicked(){
   if (screenSwitch == true){
    if ((mouseX >= x3) && (mouseX < x3+w1) && (mouseY > y3) && (mouseY < y3+h1)){
     boardChange = true; 
+    if (CommandList.size() >=2){
+    CommandList.remove(1);
+    }
     CommandList.append("description\n");
+    print(CommandList);
     ArrayBuilder();
     description.Switch();
     //UserInput("description:");
@@ -199,13 +203,15 @@ void mouseClicked(){
       //if mouseX and mouseY are a certain distance from CenterButtonArray[i].Get2X(); and CenterButtonArray[i].Get2Y();
       if ( dist(CenterButtonArray[i].get2X()+75,CenterButtonArray[i].get2Y()+75,mouseX,mouseY) <= 75)
       {
-        print("*&*They clicked in the circle!!");
+        //print("*&*They clicked in the circle!!");
         CenterButtonArray[i].Switch();
-        print("I switched!");
+        //print("I switched!");
+        CommandList.remove(1);
         CommandList.append(("move:"+i+"\n"));
+        print(CommandList);
         ArrayBuilder();
         CenterButtonArray[i].Switch();
-        print("I'm a button again!"); 
+        //print("I'm a button again!"); 
       }
     }
     
@@ -438,7 +444,7 @@ void ArrayBuilder() //Responsible for constructing tile arrays, along with openi
      }
  
      print("<"+line+">");
-     print(line.length());
+     //print(line.length());
     if (line.equals("Login successful.")){
      //print ("screenswitch is true");
         screenSwitch = true;
@@ -448,7 +454,12 @@ void ArrayBuilder() //Responsible for constructing tile arrays, along with openi
         //print(CommandList);
         
     } 
-    print(CommandList);
+    // Gets rid of extraneous incorrect login attempts from the command list being sent to the server.
+    if (line.equals("Invalid login.")){
+        CommandList.remove(0);
+        
+    } 
+    //print(CommandList);
      String[] d = split(line,':');
      if (d.length != 5)
      {
