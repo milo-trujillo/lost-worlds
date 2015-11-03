@@ -35,7 +35,7 @@ module Orders
 			return "Error: Destination impossible"
 		end
 		$orderlock.synchronize {
-			$orders.push(Move, [username, row, col])
+			$orders.push([Move, [username, row, col]])
 			return "Success: Move command accepted"
 		}
 	end
