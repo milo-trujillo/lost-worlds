@@ -210,8 +210,21 @@ void mouseClicked(){
         CommandList.append(("move:"+i+"\n"));
         print(CommandList);
         ArrayBuilder();
+        // Autorefresh of board?
         CenterButtonArray[i].Switch();
+        CommandList.remove(1);
+        CommandList.append("description\n");
+        print(CommandList);
+        ArrayBuilder();
         //print("I'm a button again!"); 
+        /*
+        if (CommandList.size() >=2){
+        CommandList.remove(1);
+        }
+        CommandList.append("description\n");
+        print(CommandList);
+        ArrayBuilder();
+        */
       }
     }
     
